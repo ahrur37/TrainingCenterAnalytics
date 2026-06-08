@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "okXMfSUOGtw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ahrur\\RiderProjects\\TrainingCenterAnalytics\\TrainingCenterAnalytics\\TrainingCenterAnalytics.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ahrur\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\ahrur\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
