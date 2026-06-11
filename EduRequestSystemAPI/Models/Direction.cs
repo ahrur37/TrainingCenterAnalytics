@@ -1,0 +1,11 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EduRequestSystemAPI.Models
+{
+    public class Direction
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+}
