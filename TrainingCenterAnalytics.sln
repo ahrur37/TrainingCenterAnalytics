@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36811.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduRequestSystemAPI", "EduRequestSystemAPI\EduRequestSystemAPI.csproj", "{5E6B92E0-8635-45C0-9D90-81288072E432}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCA.Desktop", "TCA.Desktop\TCA.Desktop.csproj", "{DD2B3CB6-C090-4DC8-96AF-9C21D824FAEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desktop", "Desktop\Desktop.csproj", "{DD2B3CB6-C090-4DC8-96AF-9C21D824FAEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
