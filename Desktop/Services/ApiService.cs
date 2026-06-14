@@ -13,7 +13,7 @@ public class ApiService
     private string? _token;
     public ApiService()
     {
-        _httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7279") };
+        _httpClient = new HttpClient { BaseAddress = new Uri("http://161.104.32.25") };
     }
     public async Task<HttpResponseMessage> AuthUserAsync(AuthUserModel model)                                                                                        
     {                                                                                                                                                                
