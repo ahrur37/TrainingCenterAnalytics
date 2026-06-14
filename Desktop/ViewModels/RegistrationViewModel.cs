@@ -17,6 +17,8 @@ public partial class RegistrationViewModel : ViewModelBase
     private string _name;
     [ObservableProperty]
     private string _message;
+    [ObservableProperty]
+    private string _messageColor = "Red";
     
     private readonly ApiService _apiservice;
     private readonly Action _onSuccess; 
@@ -34,10 +36,12 @@ public partial class RegistrationViewModel : ViewModelBase
         if (response.IsSuccessStatusCode)
         {
             Message = "Registration successful!";
+            MessageColor = "Green";
         }
         else 
         {
             Message = "Error occured while registering!";
+            MessageColor = "Red";
         }
     }
 
