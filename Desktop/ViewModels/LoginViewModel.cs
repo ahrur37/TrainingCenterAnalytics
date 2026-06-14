@@ -19,13 +19,13 @@ public partial class LoginViewModel : ViewModelBase
     private ViewModelBase _currentView;
     
     private readonly ApiService _apiservice;
-    private readonly Action _onSuccess; 
-    private readonly Action _onGoToRegistration; 
-    public LoginViewModel(ApiService apiservice,  Action onSuccess, Action onGoToRegistration)
+    private readonly SessionService _session;
+    private readonly INavigator _navigator;
+    public LoginViewModel(SessionService session, ApiService apiservice, INavigator navigator)
     {
+        _session = session;
         _apiservice = apiservice;
-        _onSuccess = onSuccess;
-        _onGoToRegistration  = onGoToRegistration;
+        _navigator = navigator;
     }
 
     [RelayCommand]
@@ -38,7 +38,7 @@ public partial class LoginViewModel : ViewModelBase
         });
         if (response.IsSuccessStatusCode)
         {
-            _onSuccess();
+            _navigator.NavigateTo(new UserViewModel(_apiservice, _session, _navigator));
         }
         else
         {
@@ -49,6 +49,6 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private async Task GoToRegistration()
     {
-        _onGoToRegistration();
+        _navigator.NavigateTo(new RegistrationViewModel(_session, _apiservice,  _navigator));
     }
 }
