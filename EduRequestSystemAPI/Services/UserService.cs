@@ -64,6 +64,7 @@ namespace EduRequestSystemAPI.Services
                 return new OkObjectResult(new
                 {
                     status = true,
+                    userId = user.Id,
                     roleId = user.RoleId,
                     token
                 });
