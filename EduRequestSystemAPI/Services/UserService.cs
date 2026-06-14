@@ -23,121 +23,175 @@ namespace EduRequestSystemAPI.Services
 
         public async Task<IActionResult> AuthUserAsync(AuthUserModel loginData)
         {
-            var user = await _context.Users
+            try
+            {
+                var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == loginData.Email && u.Password == loginData.Password);
 
-            if (user == null)
-            {
-                return new NotFoundObjectResult(new
+                if (user == null)
                 {
-                    status = false
+                    return new NotFoundObjectResult(new
+                    {
+                        status = false,
+                        message = "Пользователь не найден."
+                    });
+                }
+
+                string token = _jwtGenerator.GenerateToken(new LoginPassword()
+                {
+                    UserId = user.Id,
+                    RoleId = user.RoleId
+                });
+
+                await _context.Sessions.AddAsync(new Session
+                {
+                    Token = token,
+                    UserId = user.Id
+                });
+
+                await _context.AuditLogs.AddAsync(new AuditLog
+                {
+                    Action = AuditAction.Login,
+                    EntityName = AuditEntity.User,
+                    EntityId = user.Id,
+                    UserId = user.Id,
+                    Details = $"Пользователь {user.Email} успешно вошел в систему.",
+                    Timestamp = DateTime.UtcNow
+                });
+
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(new
+                {
+                    status = true,
+                    roleId = user.RoleId,
+                    token
                 });
             }
-
-            string token = _jwtGenerator.GenerateToken(new LoginPassword()
+            catch (Exception ex)
             {
-                UserId = user.Id,
-                RoleId = user.RoleId
-            });
-
-            await _context.Sessions.AddAsync(new Session
-            {
-                Token = token,
-                UserId = user.Id
-            });
-
-            await _context.AuditLogs.AddAsync(new AuditLog
-            {
-                Action = AuditAction.Login,
-                EntityName = AuditEntity.User,
-                EntityId = user.Id,
-                UserId = user.Id,   
-                Details = $"Пользователь {user.Email} успешно вошел в систему.",
-                Timestamp = DateTime.UtcNow
-            });
-
-            await _context.SaveChangesAsync();
-
-            return new OkObjectResult(new
-            {
-                status = true,
-                roleId = user.RoleId,
-                token
-            });
+                return new BadRequestObjectResult($"Ошибка при авторизации: {ex.Message}");
+            }
         }
 
-        public Task<IActionResult> ChangeUserRoleAsync(int userId, int newRoleId)
+        public async Task<IActionResult> GetUserByIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
+                if (user == null)
+                {
+                    return new NotFoundObjectResult($"Пользователь с ID {userId} не найден");
+                }
+
+                return new OkObjectResult(user);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при получении данных пользователя: {ex.Message}");
+            }
         }
 
-        public Task<IActionResult> GetAllUsersAsync()
+        public async Task<IActionResult> ChangeUserRoleAsync(int userId, int newRoleId)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-        public Task<IActionResult> GetUserByIdAsync(int userId)
-        {
-            throw new NotImplementedException();
+                var roleExists = await _context.Roles.AnyAsync(r => r.Id == newRoleId);
+
+                int oldRoleId = user.RoleId;
+                user.RoleId = newRoleId;
+                _context.Users.Update(user);
+
+                var auditLog = new AuditLog
+                {
+                    Action = AuditAction.ChangeRole,
+                    EntityName = AuditEntity.User,
+                    EntityId = userId,
+                    Timestamp = DateTime.UtcNow,
+                    Details = $"Администратор изменил роль пользователю ID {userId} с роли {oldRoleId} на {newRoleId}"
+                };
+                _context.AuditLogs.Add(auditLog);
+
+                await _context.SaveChangesAsync();
+                return new OkObjectResult("Роль пользователя успешно изменена");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при смене роли: {ex.Message}");
+            }
         }
 
         public async Task<IActionResult> RegUserAsync(RegUserModel newUser)
         {
-            if (string.IsNullOrEmpty(newUser.Name) || string.IsNullOrEmpty(newUser.Email))
+            try
             {
-                return new BadRequestObjectResult(new 
-                { 
-                    status = false 
-                });
-            }
-
-            if (newUser.Password.Length < 6)
-            {
-                return new BadRequestObjectResult(new
+                if (string.IsNullOrEmpty(newUser.Name) || string.IsNullOrEmpty(newUser.Email))
                 {
-                    status = false
-                });
-            }
+                    return new BadRequestObjectResult(new
+                    {
+                        status = false,
+                        message = "Имя и Email не могут быть пустыми"
+                    });
+                }
 
-            var existingUser = await _context.Users.FirstOrDefaultAsync(c =>
-                c.Email.ToLower() == newUser.Email.ToLower());
-
-            if (existingUser != null)
-            {
-                return new BadRequestObjectResult(new
+                if (newUser.Password.Length < 6)
                 {
-                    status = false
+                    return new BadRequestObjectResult(new
+                    {
+                        status = false,
+                        message = "Пароль должен содержать не менее 6 символов"
+                    });
+                }
+
+                var existingUser = await _context.Users.FirstOrDefaultAsync(c =>
+                    c.Email.ToLower() == newUser.Email.ToLower());
+
+                if (existingUser != null)
+                {
+                    return new BadRequestObjectResult(new
+                    {
+                        status = false,
+                        message = "Пользователь с таким адресом уже зарегистрирован"
+                    });
+                }
+
+                var user = new User()
+                {
+                    Name = newUser.Name,
+                    Email = newUser.Email,
+                    Password = newUser.Password,
+                    RoleId = 1
+                };
+
+                var auditLog = new AuditLog
+                {
+                    Action = AuditAction.Register,
+                    EntityName = AuditEntity.User,
+                    Timestamp = DateTime.UtcNow,
+                    Details = $"Зарегистрирован новый пользователь: {user.Email} (Имя: {user.Name}).",
+                    User = user
+                };
+
+                await _context.Users.AddAsync(user);
+                await _context.AuditLogs.AddAsync(auditLog);
+                await _context.SaveChangesAsync();
+
+                auditLog.EntityId = user.Id;
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(new
+                {
+                    status = true
                 });
             }
-
-            var user = new User()
+            catch (Exception ex)
             {
-                Name = newUser.Name,
-                Email = newUser.Email,
-                Password = newUser.Password,
-                RoleId = 1
-            };
-
-            var auditLog = new AuditLog
-            {
-                Action = AuditAction.Register,
-                EntityName = AuditEntity.User,
-                Timestamp = DateTime.UtcNow,
-                Details = $"Зарегистрирован новый пользователь: {user.Email} (Имя: {user.Name}).",
-                User = user
-            };
-
-            await _context.Users.AddAsync(user);
-            await _context.AuditLogs.AddAsync(auditLog);
-            await _context.SaveChangesAsync();
-
-            auditLog.EntityId = user.Id;
-            await _context.SaveChangesAsync();
-
-            return new OkObjectResult(new
-            {
-                status = true
-            });
+                return new BadRequestObjectResult($"Ошибка при регистрации: {ex.Message}");
+            }
         }
     }
 }

@@ -5,10 +5,7 @@ namespace EduRequestSystemAPI.Interfaces
 {
     public interface ICommentService
     {
-        // добавить комментарий к заявке
-        Task<IActionResult> AddCommentAsync(CreateComment createCommentModel);
-
-        // получить все комментарии к конкретной заявке
-        Task<IActionResult> GetCommentsByRequestIdAsync(int requestId);
+        Task<IActionResult> AddCommentAsync(CreateComment createCommentModel); // добавить комментарий к заявке
+        Task<IActionResult> GetCommentsByRequestIdAsync(int requestId); // получить все комментарии к конкретной заявке
     }
 }
