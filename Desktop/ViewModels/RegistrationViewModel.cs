@@ -21,12 +21,13 @@ public partial class RegistrationViewModel : ViewModelBase
     private string _messageColor = "Red";
     
     private readonly ApiService _apiservice;
-    private readonly Action _onSuccess; 
-    private readonly Action _onBack; 
-    public RegistrationViewModel(ApiService apiService, Action onBack)
+    private readonly SessionService _session;
+    private readonly INavigator _navigator;
+    public RegistrationViewModel(SessionService session, ApiService apiService, INavigator navigator)
     {
         _apiservice = apiService;
-        _onBack = onBack;
+        _session = session;
+        _navigator = navigator;
     }
 
     [RelayCommand]
@@ -48,6 +49,6 @@ public partial class RegistrationViewModel : ViewModelBase
     [RelayCommand]
     private async Task GoBack()
     {
-        _onBack();
+        _navigator.GoBack();
     }
 }

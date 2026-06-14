@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:TCA.Desktop.ViewModels"
+             x:DataType="vm:UserViewModel"
+             x:Class="TCA.Desktop.Views.UserView">
+    <Grid ColumnDefinitions="Auto" RowDefinitions="Auto, *">
+        <Button Content="hello"></Button>
+        <DataGrid ItemsSource="{Binding Requests}" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№"           Binding="{Binding Id}"                  Width="50" />
+                <DataGridTextColumn Header="Тема"        Binding="{Binding Topic}"                Width="200" />
+                <DataGridTextColumn Header="Описание"    Binding="{Binding Description}"          Width="250" />
+                <DataGridTextColumn Header="Направление" Binding="{Binding Direction.Name}"       Width="150" />
+                <DataGridTextColumn Header="Формат"      Binding="{Binding TrainingFormat.Name}"  Width="120" />
+                <DataGridTextColumn Header="Статус"      Binding="{Binding Status.Name}"          Width="120" />
+                <DataGridTextColumn Header="Создана"     Binding="{Binding CreatedAt}"            Width="130" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

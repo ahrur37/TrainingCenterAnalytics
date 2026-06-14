@@ -21,10 +21,12 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var apiservice = new ApiService();
+            var sessionservice = new SessionService();
+            var apiservice = new ApiService(sessionservice);
+            var mainvm = new MainWindowViewModel(sessionservice, apiservice);
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(apiservice),
+                DataContext = mainvm
             };
         }
 
