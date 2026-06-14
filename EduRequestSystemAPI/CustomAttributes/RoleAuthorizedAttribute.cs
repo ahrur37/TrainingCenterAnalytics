@@ -9,7 +9,7 @@ namespace EduRequestSystemAPI.CustomAttributes
     public class RoleAuthorizedAttribute : Attribute, IAsyncActionFilter
     {
         private readonly int[] _roleId;
-        public RoleAuthorizedAttribute(int[] roleId)
+        public RoleAuthorizedAttribute(params int[] roleId)
         {
             _roleId = roleId;
         }
@@ -17,7 +17,7 @@ namespace EduRequestSystemAPI.CustomAttributes
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var dbContext = context.HttpContext.RequestServices.GetRequiredService<ContextDb>();
-            string? token = context.HttpContext.Request.Headers["Autorization"].FirstOrDefault();
+            string? token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 
             if (string.IsNullOrEmpty(token))
             {

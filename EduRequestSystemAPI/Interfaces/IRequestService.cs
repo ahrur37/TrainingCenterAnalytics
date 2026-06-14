@@ -5,18 +5,10 @@ namespace EduRequestSystemAPI.Interfaces
 {
     public interface IRequestService
     {
-        // создание и получение заявок
-        Task<IActionResult> CreateRequestAsync(CreateRequest createRequestModel);
-        Task<IActionResult> GetAllRequestsAsync();
-        Task<IActionResult> GetRequestByIdAsync(int requestId);
-
-        // фильтрация и поиск (для менеджера и руководителя)
-        Task<IActionResult> FilterRequestsAsync(int? statusId, int? directionId, string? searchTerm);
-
-        // назначение ответственного менеджера
-        Task<IActionResult> AssignManagerAsync(int requestId, int managerId);
-
-        // смена статуса
-        Task<IActionResult> ChangeStatusAsync(int requestId, int newStatusId, int currentUserId);
+        Task<IActionResult> CreateRequestAsync(CreateRequest createRequestModel); // создать заявку
+        Task<IActionResult> GetRequestsAsync(int? statusId, int? directionId, string? searchTerm, int? assigneeId, int? authorId); // получить заявки с фильтрами
+        Task<IActionResult> GetRequestByIdAsync(int requestId); // получить все заявки от конкретного заявителя
+        Task<IActionResult> AssignManagerAsync(int requestId, int managerId); // взять заявку в работу
+        Task<IActionResult> ChangeStatusAsync(int requestId, int newStatusId, int currentUserId); // изменить статус заявки
     }
 }
