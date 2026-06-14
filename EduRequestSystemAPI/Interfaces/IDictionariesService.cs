@@ -4,8 +4,10 @@ namespace EduRequestSystemAPI.Interfaces
 {
     public interface IDictionariesService
     {
-        Task<IActionResult> GetDirectionsAsync();      // список всех направлений
-        Task<IActionResult> GetTrainingFormatsAsync(); // список всех форматов обучения
-        Task<IActionResult> GetStatusesAsync();        // список всех возможных статусов
+        Task<IActionResult> GetDirectionsAsync(); // направления
+        Task<IActionResult> GetTrainingFormatsAsync(); // форматы обучения
+        Task<IActionResult> GetStatusesAsync(); // статусы
+        Task<IActionResult> GetRolesAsync(); // роли
+        Task<IActionResult> GetAllUsersAsync(); // пользователи
     }
 }
