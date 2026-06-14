@@ -5,13 +5,9 @@ namespace EduRequestSystemAPI.Interfaces
 {
     public interface IUserService
     {
-        // вход и регистрация
-        Task<IActionResult> RegUserAsync(RegUserModel newUser);
-        Task<IActionResult> AuthUserAsync(AuthUserModel loginData);
-
-        // управление пользователями (для админа)
-        Task<IActionResult> GetUserByIdAsync(int userId);
-        Task<IActionResult> GetAllUsersAsync();
-        Task<IActionResult> ChangeUserRoleAsync(int userId, int newRoleId);
+        Task<IActionResult> RegUserAsync(RegUserModel newUser); // регистрация
+        Task<IActionResult> AuthUserAsync(AuthUserModel loginData); // вход
+        Task<IActionResult> GetUserByIdAsync(int userId); // получить конкретного пользователя
+        Task<IActionResult> ChangeUserRoleAsync(int userId, int newRoleId); // изменить роль пользователя
     }
 }
