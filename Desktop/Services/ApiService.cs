@@ -75,12 +75,14 @@ public class ApiService
 
     public async Task<HttpResponseMessage> ChangeStatus(ChangeStatusModel model)
     {
-        var response = await _httpClient.PostAsJsonAsync("ChangeStatus", model);
+        var url = $"ChangeStatus?requestId={model.RequestId}&newStatusId={model.NewStatusId}&currentUserId={model.CurrentUserId}";                                                                                      
+        var response = await _httpClient.PostAsync(url, null);      
         return response;
     }
 
-    public async Task<HttpResponseMessage> AddComment()
+    public async Task<HttpResponseMessage> AddComment(CreateCommentModel model)
     {
-        
+        var response = await _httpClient.PostAsJsonAsync("AddComment", model);
+        return response;
     }
 }
