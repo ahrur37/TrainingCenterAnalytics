@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -25,17 +26,23 @@ public partial class LobbyViewModel : ViewModelBase
     [ObservableProperty]
     private StatusModel? _selectedStatus;
     [ObservableProperty]
-    private ChangeStatusModel? _selectedNewStatus;
+    private StatusModel? _selectedNewStatus;
     [ObservableProperty]
     private RequestModel? _selectedRequest;
     [ObservableProperty] 
     private bool _canView = false;
+    [ObservableProperty] 
+    private bool _canViewAdm = false;
     [ObservableProperty]                                                                                                                                                          
     private string _statusMessage = string.Empty;                                                                                                                                 
     [ObservableProperty]                                                                                                                                                          
-    private string _statusMessageColor = "Green"; 
+    private string _messageColor = "Green"; 
+    [ObservableProperty]                                                                                                                                                          
+    private string _shareMessageColor = "Green"; 
     [ObservableProperty]
     private string _newComment = string.Empty;
+    [ObservableProperty]
+    private string _shareStatusMessage = string.Empty;
 
     private bool _isResetting; 
     private readonly ApiService _apiService;
@@ -48,6 +55,7 @@ public partial class LobbyViewModel : ViewModelBase
         _navigator = navigator;
         _session = session;
         CanView = (Roles)_session.RoleId != Roles.User;
+        CanViewAdm = (Roles)_session.RoleId == Roles.Admin;
         _ = LoadRequestsAsync();
         _ = LoadComboboxesAsync();
     }
@@ -68,6 +76,7 @@ public partial class LobbyViewModel : ViewModelBase
 
     private async Task LoadCommentsAsync()
     {
+        if (SelectedRequest == null) return; 
         var comments = await _apiService.GetComments(SelectedRequest.Id);
         Listcomments = new ObservableCollection<CommentModel>(comments);
 
@@ -106,6 +115,15 @@ public partial class LobbyViewModel : ViewModelBase
     {
         if (!_isResetting) _ = ApplyFilters(SelectedStatus?.Id, value?.Id);
     }
+    
+    partial void OnSelectedRequestChanged(RequestModel? value)                                                                                                                    
+    {
+        if (value != null)
+        {
+            SelectedNewStatus = Liststatuses?.FirstOrDefault(s => s.Id == value.StatusId);                                                                                        
+            _ = LoadCommentsAsync();  
+        }                                                                                                                            
+    } 
 
     [RelayCommand]
     private async Task ResetFilters()
@@ -120,28 +138,71 @@ public partial class LobbyViewModel : ViewModelBase
     [RelayCommand]
     private async Task ChangeStatus()
     {
-        var response = await _apiService.ChangeStatus(SelectedNewStatus);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            StatusMessage = "Success";
-            StatusMessageColor = "Green";
+            if (SelectedRequest == null || SelectedNewStatus == null) return; 
+        
+            var response = await _apiService.ChangeStatus(new ChangeStatusModel()
+            {
+                RequestId = SelectedRequest.Id,
+                NewStatusId = SelectedNewStatus.Id,
+                CurrentUserId =  _session.UserId
+            });
+            if (response.IsSuccessStatusCode)
+            {
+                StatusMessage = "Success";
+                MessageColor = "Green";
+                await LoadRequestsAsync();    
+            }
+            else
+            {                                                                                                      
+                StatusMessage = "Error";
+                MessageColor = "Red";   
+            }
         }
-        else
+        catch (Exception e)
         {
-            StatusMessage = "Error";
-            StatusMessageColor = "Red";
+            Console.WriteLine(e);
+            
         }
+        
     }
 
     [RelayCommand]
     private async Task AddComment()
     {
-        var response = await 
+        if (SelectedRequest == null || string.IsNullOrWhiteSpace(NewComment)) return;                                                                                             
+
+        var response = await _apiService.AddComment(new CreateCommentModel()
+        {
+            Content =  _newComment,
+            AuthorId =  _session.UserId,
+            RequestId = SelectedRequest.Id
+        });
+        
+        if (response.IsSuccessStatusCode)                                                                                                                                         
+        {                                                                                                                                                                         
+            NewComment = string.Empty;    
+            ShareStatusMessage = "Success";
+            ShareMessageColor = "Green";
+            await LoadCommentsAsync();                                                                                                                                            
+        }
+        else
+        {
+            ShareStatusMessage = "Fail";
+            ShareMessageColor = "Read";
+        }
     }
 
     [RelayCommand]
     private void Logout()
     {
         _navigator.NavigateTo(new LoginViewModel(_session, _apiService, _navigator));
+    }
+
+    [RelayCommand]
+    private void GoToManuals()
+    {
+        _navigator.NavigateTo(new ManualsViewModel());
     }
 }
