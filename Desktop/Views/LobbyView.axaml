@@ -12,6 +12,7 @@
             <ComboBox ItemsSource="{Binding Listdirections}" IsVisible="{Binding CanView}" SelectedItem="{Binding SelectedDirection, Mode=TwoWay}" DisplayMemberBinding="{Binding Name}" Width="150"/>
             <ComboBox ItemsSource="{Binding Liststatuses}" IsVisible="{Binding CanView}" SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" DisplayMemberBinding="{Binding Name}" Width="150"/>
             <Button Content="Reset" Command="{Binding ResetFiltersCommand}" IsVisible="{Binding CanView}"/>
+            <Button Content="Manuals" Command="{Binding GoToManualsCommand}" IsVisible="{Binding CanViewAdm}" HorizontalAlignment="Right"/>
         </StackPanel>
 
         <DataGrid ItemsSource="{Binding Requests}" SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1" Grid.Column="0">
@@ -35,7 +36,7 @@
                       DisplayMemberBinding="{Binding Name}"
                       Width="280"/>
             <Button Content="Изменить статус" Command="{Binding ChangeStatusCommand}" HorizontalAlignment="Stretch"/>
-            <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}"/>
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding MessageColor}"/>
 
             <Separator/>
 
@@ -53,6 +54,7 @@
             </ListBox>
             <TextBox Text="{Binding NewComment, Mode=TwoWay}" Watermark="Введите комментарий..." Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
             <Button Content="Отправить" Command="{Binding AddCommentCommand}" HorizontalAlignment="Stretch"/>
+            <TextBlock Text="{Binding ShareStatusMessage}" Foreground="{Binding ShareMessageColor}"/>
         </StackPanel>
     </Grid>
 </UserControl>

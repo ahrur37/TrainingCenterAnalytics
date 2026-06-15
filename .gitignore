@@ -20,4 +20,5 @@ artifacts/
 
 # OS
 .DS_Store
-Thumbs.dbdocker-compose.yml
+Thumbs.db
+docker-compose.yml
