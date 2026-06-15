@@ -38,7 +38,7 @@ public partial class LoginViewModel : ViewModelBase
         });
         if (response.IsSuccessStatusCode)
         {
-            _navigator.NavigateTo(new UserViewModel(_apiservice, _session, _navigator));
+            _navigator.NavigateTo(new LobbyViewModel(_apiservice, _session, _navigator));
         }
         else
         {
