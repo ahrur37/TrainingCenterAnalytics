@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace TCA.Desktop.Views;
 
-public partial class UserView : UserControl
+public partial class LobbyView : UserControl
 {
-    public UserView()
+    public LobbyView()
     {
         InitializeComponent();
     }

@@ -31,9 +31,8 @@ public class ApiService
             _session.Token = result!.Token;
             _session.UserId = result.UserId;
             _session.RoleId = result.RoleId;
-            _httpClient.DefaultRequestHeaders.Authorization =                                                                                                                             
-                new AuthenticationHeaderValue("Bearer", _session.Token);
-            Console.WriteLine(result.Token);
+            _httpClient.DefaultRequestHeaders.Remove("Authorization");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", _session.Token);
         }
         return response;
     }
@@ -44,10 +43,44 @@ public class ApiService
         return response;
     }
 
-    public async Task<List<RequestModel>> GetRequests(int userid)
+    public async Task<List<RequestModel>> GetRequests(int? userid = null, int? statusid = null, int? directionid = null)
     {
-        var response = await _httpClient.GetAsync($"GetRequests?authorId={userid}");
+        var query = new List<string>();
+        if (userid.HasValue)      query.Add($"authorId={userid}");                                                                                                                
+        if (statusid.HasValue)    query.Add($"statusId={statusid}");   
+        if (directionid.HasValue)  query.Add($"directionId={directionid}");
+        
+        var url = query.Count > 0 ? $"GetRequests?{string.Join("&", query)}" : "GetRequests";
+        var response = await _httpClient.GetAsync(url);
+        if (!response.IsSuccessStatusCode) return [];
         return await response.Content.ReadFromJsonAsync<List<RequestModel>>(_jsonOptions) ?? [];
+    }
+
+    public async Task<List<DirectionModel>> GetDirections()
+    {
+        var response = await _httpClient.GetAsync("GetDirections");
+        return await response.Content.ReadFromJsonAsync<List<DirectionModel>>(_jsonOptions) ?? [];
+    }
+    
+    public async Task<List<StatusModel>> GetStatuses()
+    {
+        var response = await _httpClient.GetAsync($"GetStatuses");
+        return await response.Content.ReadFromJsonAsync<List<StatusModel>>(_jsonOptions) ?? [];
+    }
+    public async Task<List<CommentModel>> GetComments(int requestId)
+    {
+        var response = await _httpClient.GetAsync($"GetCommentsByRequestId/{requestId}");
+        return await response.Content.ReadFromJsonAsync<List<CommentModel>>(_jsonOptions) ?? [];
+    }
+
+    public async Task<HttpResponseMessage> ChangeStatus(ChangeStatusModel model)
+    {
+        var response = await _httpClient.PostAsJsonAsync("ChangeStatus", model);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> AddComment()
+    {
         
     }
 }
