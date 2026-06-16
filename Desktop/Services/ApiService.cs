@@ -42,6 +42,12 @@ public class ApiService
         var response = await _httpClient.PostAsJsonAsync("RegUser", model);
         return response;
     }
+    
+    public async Task<HttpResponseMessage> CreateReqAsync(CreateRequestModel model)
+    {
+        var response = await _httpClient.PostAsJsonAsync("CreateRequest", model);
+        return response;
+    }
 
     public async Task<List<RequestModel>> GetRequests(int? userid = null, int? statusid = null, int? directionid = null)
     {
@@ -62,6 +68,12 @@ public class ApiService
         return await response.Content.ReadFromJsonAsync<List<DirectionModel>>(_jsonOptions) ?? [];
     }
     
+    public async Task<List<TrainingFormatModel>> GetTrainingFormats()
+    {
+        var response = await _httpClient.GetAsync("GetTrainingFormats");
+        return await response.Content.ReadFromJsonAsync<List<TrainingFormatModel>>(_jsonOptions) ?? [];
+    }
+
     public async Task<List<StatusModel>> GetStatuses()
     {
         var response = await _httpClient.GetAsync($"GetStatuses");

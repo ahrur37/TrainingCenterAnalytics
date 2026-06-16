@@ -4,4 +4,5 @@ namespace TCA.Desktop.ViewModels;
 
 public abstract class ViewModelBase : ObservableObject
 {
+    public virtual void OnNavigatedTo() { }
 }
