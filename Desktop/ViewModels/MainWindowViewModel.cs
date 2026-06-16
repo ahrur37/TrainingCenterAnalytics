@@ -30,6 +30,9 @@ public partial class MainWindowViewModel : ViewModelBase, INavigator
     public void GoBack()
     {
         if (_history.Count > 0)
+        {
             CurrentView = _history.Pop();
+            CurrentView.OnNavigatedTo();
+        }
     }
 }

@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:TCA.Desktop.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TCA.Desktop.Views.CreateRequestView"
+             x:DataType="vm:CreateRequestViewModel">
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        <StackPanel Spacing="12">
+            <TextBlock Text="Новая заявка" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Тема *"/>
+                <TextBox Text="{Binding Topic, Mode=TwoWay}" Watermark="Введите тему заявки"/>
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Описание"/>
+                <TextBox Text="{Binding Description, Mode=TwoWay}"
+                         Watermark="Введите описание"
+                         Height="80"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"/>
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Контактная информация"/>
+                <TextBox Text="{Binding ContactInfo, Mode=TwoWay}" Watermark="Телефон или email"/>
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Направление *"/>
+                <ComboBox ItemsSource="{Binding Directions}"
+                          SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
+                          DisplayMemberBinding="{Binding Name}"
+                          HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Формат обучения *"/>
+                <ComboBox ItemsSource="{Binding Formats}"
+                          SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"
+                          DisplayMemberBinding="{Binding Name}"
+                          HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <TextBlock Text="{Binding ErrorMessage}"
+                       Foreground="{Binding ErrorMessageColor}"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+            <Button Content="Создать заявку"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding CreateRequestCommand}"/>
+
+            <Button Content="Назад"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding GoBackCommand}"/>
+
+        </StackPanel>
+    </Grid>
+
+</UserControl>
