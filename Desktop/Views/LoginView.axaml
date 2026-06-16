@@ -14,7 +14,7 @@
 
             <StackPanel Spacing="4">
                 <TextBlock Text="Login"/>
-                <TextBox Text="{Binding Login}" Watermark="Enter your login"/>
+                <TextBox Text="{Binding Login}" Watermark="Enter login"/>
             </StackPanel>
 
             <StackPanel Spacing="4">
