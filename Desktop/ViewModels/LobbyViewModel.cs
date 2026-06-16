@@ -43,6 +43,7 @@ public partial class LobbyViewModel : ViewModelBase
     private string _newComment = string.Empty;
     [ObservableProperty]
     private string _shareStatusMessage = string.Empty;
+    
 
     private bool _isResetting; 
     private readonly ApiService _apiService;
@@ -192,6 +193,12 @@ public partial class LobbyViewModel : ViewModelBase
             ShareStatusMessage = "Fail";
             ShareMessageColor = "Read";
         }
+    }
+
+    [RelayCommand]
+    private async Task GoToCreateRequest()
+    {
+        _navigator.NavigateTo(new CreateRequestViewModel(_session, _apiService, _navigator));
     }
 
     [RelayCommand]

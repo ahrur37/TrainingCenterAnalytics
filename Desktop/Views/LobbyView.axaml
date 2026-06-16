@@ -9,6 +9,7 @@
     <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, *">
         <StackPanel Orientation="Horizontal" Spacing="30" Margin="10" Grid.ColumnSpan="2">
             <Button Content="Log out" Command="{Binding LogoutCommand}"/>
+            <Button Content="Create request" Command="{Binding GoToCreateRequestCommand}"/>
             <ComboBox ItemsSource="{Binding Listdirections}" IsVisible="{Binding CanView}" SelectedItem="{Binding SelectedDirection, Mode=TwoWay}" DisplayMemberBinding="{Binding Name}" Width="150"/>
             <ComboBox ItemsSource="{Binding Liststatuses}" IsVisible="{Binding CanView}" SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" DisplayMemberBinding="{Binding Name}" Width="150"/>
             <Button Content="Reset" Command="{Binding ResetFiltersCommand}" IsVisible="{Binding CanView}"/>
@@ -28,17 +29,18 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Width="300" Margin="10" Spacing="10"
-                    IsVisible="{Binding CanView}">
-            <TextBlock Text="Статус заявки" FontWeight="Bold"/>
-            <ComboBox ItemsSource="{Binding Liststatuses}"
-                      SelectedItem="{Binding SelectedNewStatus, Mode=TwoWay}"
-                      DisplayMemberBinding="{Binding Name}"
-                      Width="280"/>
-            <Button Content="Изменить статус" Command="{Binding ChangeStatusCommand}" HorizontalAlignment="Stretch"/>
-            <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding MessageColor}"/>
-
-            <Separator/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Width="300" Margin="10" Spacing="10">
+            <StackPanel IsVisible="{Binding CanView}" Spacing="10">
+                <TextBlock Text="Статус заявки" FontWeight="Bold"/>
+                <ComboBox ItemsSource="{Binding Liststatuses}"
+                          SelectedItem="{Binding SelectedNewStatus, Mode=TwoWay}"
+                          DisplayMemberBinding="{Binding Name}"
+                          Width="280"/>
+                <Button Content="Изменить статус" Command="{Binding ChangeStatusCommand}" HorizontalAlignment="Stretch"/>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding MessageColor}"/>
+            </StackPanel>
+            
+            <Separator IsVisible="{Binding CanView}"/>
 
             <TextBlock Text="Комментарии" FontWeight="Bold"/>
             <ListBox ItemsSource="{Binding Listcomments}" Height="200">
