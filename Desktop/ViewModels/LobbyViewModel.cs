@@ -95,7 +95,7 @@ public partial class LobbyViewModel : ViewModelBase
             else if (role == Roles.User)
                 list = await _apiService.GetRequests(userid: _session.UserId);
             else if (role == Roles.Manager)
-                list = await _apiService.GetRequests(statusid: statusId ?? (int)Statuses.New, directionid: directionId);
+                list = await _apiService.GetRequests(statusid: statusId, directionid: directionId);
             else
                 list = [];
 
