@@ -43,6 +43,14 @@ public partial class LobbyViewModel : ViewModelBase
     private string _newComment = string.Empty;
     [ObservableProperty]
     private string _shareStatusMessage = string.Empty;
+    [ObservableProperty]
+    private ObservableCollection<UserModel> _listManagers = [];
+    [ObservableProperty]
+    private UserModel? _selectedManager;
+    [ObservableProperty]
+    private string _assignMessage = string.Empty;
+    [ObservableProperty]
+    private string _assignMessageColor = "Green";
     
 
     private bool _isResetting; 
@@ -65,9 +73,11 @@ public partial class LobbyViewModel : ViewModelBase
     {
         var directions = _apiService.GetDirections();
         var statuses = _apiService.GetStatuses();
-        await Task.WhenAll(directions, statuses);
+        var users = _apiService.GetAllUsers();
+        await Task.WhenAll(directions, statuses, users);
         Listdirections = new ObservableCollection<DirectionModel>(directions.Result);
         Liststatuses = new ObservableCollection<StatusModel>(statuses.Result);
+        ListManagers = new ObservableCollection<UserModel>(users.Result.Where(u => u.RoleId == (int)Roles.Manager));
     }
 
     private async Task LoadRequestsAsync()
@@ -192,6 +202,30 @@ public partial class LobbyViewModel : ViewModelBase
         {
             ShareStatusMessage = "Fail";
             ShareMessageColor = "Read";
+        }
+    }
+
+    [RelayCommand]
+    private async Task AssignManager()
+    {
+        if (SelectedRequest == null || SelectedManager == null) return;
+
+        var response = await _apiService.ChangeAssignManager(new AssignManagerModel
+        {
+            RequestId = SelectedRequest.Id,
+            ManagerId = SelectedManager.Id
+        });
+
+        if (response.IsSuccessStatusCode)
+        {
+            AssignMessage = "Назначен";
+            AssignMessageColor = "Green";
+            await LoadRequestsAsync();
+        }
+        else
+        {
+            AssignMessage = response.ToString();
+            AssignMessageColor = "Red";
         }
     }
 

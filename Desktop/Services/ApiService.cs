@@ -97,4 +97,16 @@ public class ApiService
         var response = await _httpClient.PostAsJsonAsync("AddComment", model);
         return response;
     }
+    
+    public async Task<List<UserModel>> GetAllUsers()
+    {
+        var response = await _httpClient.GetAsync("GetAllUsers");
+        return await response.Content.ReadFromJsonAsync<List<UserModel>>(_jsonOptions) ?? [];
+    }
+
+    public async Task<HttpResponseMessage> ChangeAssignManager(AssignManagerModel model)
+    {
+        var response = await _httpClient.PostAsync($"AssignManager?requestId={model.RequestId}&managerId={model.ManagerId}", null);
+        return response;
+    }
 }
