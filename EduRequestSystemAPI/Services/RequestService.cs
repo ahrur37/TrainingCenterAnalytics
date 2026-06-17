@@ -197,7 +197,7 @@ namespace EduRequestSystemAPI.Services
                                              r.Description.ToLower().Contains(searchTerm));
                 }
 
-                var filteredRequests = await query.OrderByDescending(r => r.CreatedAt).ToListAsync();
+                var filteredRequests = await query.OrderBy(r => r.Id).ToListAsync();
                 return new OkObjectResult(filteredRequests);
             }
             catch (Exception ex)

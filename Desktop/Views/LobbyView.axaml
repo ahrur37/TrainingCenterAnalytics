@@ -42,6 +42,18 @@
             
             <Separator IsVisible="{Binding CanView}"/>
 
+            <StackPanel IsVisible="{Binding CanView}" Spacing="10">
+                <TextBlock Text="Ответственный" FontWeight="Bold"/>
+                <ComboBox ItemsSource="{Binding ListManagers}"
+                          SelectedItem="{Binding SelectedManager, Mode=TwoWay}"
+                          DisplayMemberBinding="{Binding Name}"
+                          Width="280"/>
+                <Button Content="Назначить" Command="{Binding AssignManagerCommand}" HorizontalAlignment="Stretch"/>
+                <TextBlock Text="{Binding AssignMessage}" Foreground="{Binding AssignMessageColor}"/>
+            </StackPanel>
+
+            <Separator IsVisible="{Binding CanView}"/>
+
             <TextBlock Text="Комментарии" FontWeight="Bold"/>
             <ListBox ItemsSource="{Binding Listcomments}" Height="200">
                 <ListBox.ItemTemplate>
