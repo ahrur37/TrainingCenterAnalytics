@@ -1,5 +1,7 @@
 ﻿using EduRequestSystemAPI.DatabaseContext;
 using EduRequestSystemAPI.Interfaces;
+using EduRequestSystemAPI.Models;
+using EduRequestSystemAPI.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
@@ -28,6 +30,62 @@ namespace EduRequestSystemAPI.Services
             }
         }
 
+        public async Task<IActionResult> CreateDirectionAsync(DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название направления не может быть пустым.");
+
+                var direction = new Direction { Name = model.Name };
+                _context.Directions.Add(direction);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(direction);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при создании направления: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> UpdateDirectionAsync(int id, DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название направления не может быть пустым.");
+
+                var direction = await _context.Directions.FindAsync(id);
+
+                direction.Name = model.Name;
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(direction);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при обновлении направления: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> DeleteDirectionAsync(int id)
+        {
+            try
+            {
+                var direction = await _context.Directions.FindAsync(id);
+
+                _context.Directions.Remove(direction);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult($"Направление '{direction.Name}' успешно удалено.");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при удалении направления (возможно, оно используется в заявках): {ex.Message}");
+            }
+        }
+
         public async Task<IActionResult> GetStatusesAsync()
         {
             try
@@ -38,6 +96,62 @@ namespace EduRequestSystemAPI.Services
             catch (Exception ex)
             {
                 return new BadRequestObjectResult($"Ошибка при получении списка статусов: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> CreateStatusAsync(DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название статуса не может быть пустым.");
+
+                var status = new Status { Name = model.Name };
+                _context.Statuses.Add(status);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(status);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при создании статуса: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> UpdateStatusAsync(int id, DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название статуса не может быть пустым.");
+
+                var status = await _context.Statuses.FindAsync(id);
+
+                status.Name = model.Name;
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(status);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при обновлении статуса: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> DeleteStatusAsync(int id)
+        {
+            try
+            {
+                var status = await _context.Statuses.FindAsync(id);
+
+                _context.Statuses.Remove(status);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult($"Статус '{status.Name}' успешно удалено.");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при удалении статуса: {ex.Message}");
             }
         }
 
@@ -54,6 +168,62 @@ namespace EduRequestSystemAPI.Services
             }
         }
 
+        public async Task<IActionResult> CreateTrainingFormatAsync(DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название формата обучения не может быть пустым.");
+
+                var format = new TrainingFormat { Name = model.Name };
+                _context.TrainingFormats.Add(format);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(format);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при создании формата обучения: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> UpdateTrainingFormatAsync(int id, DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название формата обучения не может быть пустым.");
+
+                var format = await _context.TrainingFormats.FindAsync(id);
+
+                format.Name = model.Name;
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(format);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при обновлении формата обучения: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> DeleteTrainingFormatAsync(int id)
+        {
+            try
+            {
+                var format = await _context.TrainingFormats.FindAsync(id);
+
+                _context.TrainingFormats.Remove(format);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult($"Формат '{format.Name}' успешно удален.");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при удалении формата обучения: {ex.Message}");
+            }
+        }
+
         public async Task<IActionResult> GetRolesAsync()
         {
             try
@@ -64,6 +234,62 @@ namespace EduRequestSystemAPI.Services
             catch (Exception ex)
             {
                 return new BadRequestObjectResult($"Ошибка при получении списка ролей: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> CreateRoleAsync(DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название роли не может быть пустым.");
+
+                var role = new Role { Name = model.Name };
+                _context.Roles.Add(role);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(role);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при создании роли: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> UpdateRoleAsync(int id, DictionaryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.Name))
+                    return new BadRequestObjectResult("Название роли не может быть пустым.");
+
+                var role = await _context.Roles.FindAsync(id);
+
+                role.Name = model.Name;
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(role);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при обновлении роли: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> DeleteRoleAsync(int id)
+        {
+            try
+            {
+                var role = await _context.Roles.FindAsync(id);
+
+                _context.Roles.Remove(role);
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult($"Роль '{role.Name}' успешно удалена.");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при удалении роли: {ex.Message}");
             }
         }
 
