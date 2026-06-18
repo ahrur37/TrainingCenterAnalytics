@@ -97,7 +97,7 @@ namespace EduRequestSystemAPI.Controllers
         /// <param name="newStatusId">ID нового статуса, который нужно установить</param>
         /// <param name="currentUserId">ID текущего авторизованного сотрудника, выполняющего операцию</param>
         [HttpPost]
-        [RoleAuthorized(2, 3)]
+        [RoleAuthorized(2, 3, 4)]
         [Route("ChangeStatus")]
         public async Task<IActionResult> ChangeStatus(int requestId, int newStatusId, int currentUserId)
         {
