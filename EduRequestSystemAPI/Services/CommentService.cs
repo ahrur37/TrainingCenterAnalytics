@@ -51,6 +51,8 @@ namespace EduRequestSystemAPI.Services
                 _context.AuditLogs.Add(auditLog);
                 await _context.SaveChangesAsync();
 
+                var author = await _context.Users.FindAsync(newComment.AuthorId);
+
                 await _hub.Clients
                     .Group($"request-{newComment.RequestId}")
                     .SendAsync("CommentAdded", new
@@ -58,6 +60,7 @@ namespace EduRequestSystemAPI.Services
                         id = newComment.Id,
                         content = newComment.Content,
                         authorId = newComment.AuthorId,
+                        author = author == null ? null : new { author.Id, author.Name, author.Email },
                         requestId = newComment.RequestId,
                         createdAt = newComment.CreatedAt
                     });
