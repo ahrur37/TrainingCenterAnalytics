@@ -62,7 +62,7 @@
                             <StackPanel Spacing="2">
                                 <TextBlock Text="{Binding Author.Name}" FontWeight="Bold" FontSize="12"/>
                                 <TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
-                                <TextBlock Text="{Binding CreatedAt}" FontSize="11" Foreground="Gray"/>
+                                <TextBlock Text="{Binding CreatedAtLocal}" FontSize="11" Foreground="Gray"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
