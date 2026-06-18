@@ -109,4 +109,34 @@ public class ApiService
         var response = await _httpClient.PostAsync($"AssignManager?requestId={model.RequestId}&managerId={model.ManagerId}", null);
         return response;
     }
+
+    // Directions
+    public async Task<HttpResponseMessage> CreateDirection(string name) =>
+        await _httpClient.PostAsJsonAsync("CreateDirection", new { name });
+
+    public async Task<HttpResponseMessage> UpdateDirection(int id, string name) =>
+        await _httpClient.PutAsJsonAsync($"UpdateDirection/{id}", new { name });
+
+    public async Task<HttpResponseMessage> DeleteDirection(int id) =>
+        await _httpClient.DeleteAsync($"DeleteDirection/{id}");
+
+    // Statuses
+    public async Task<HttpResponseMessage> CreateStatus(string name) =>
+        await _httpClient.PostAsJsonAsync("CreateStatus", new { name });
+
+    public async Task<HttpResponseMessage> UpdateStatus(int id, string name) =>
+        await _httpClient.PutAsJsonAsync($"UpdateStatus/{id}", new { name });
+
+    public async Task<HttpResponseMessage> DeleteStatus(int id) =>
+        await _httpClient.DeleteAsync($"DeleteStatus/{id}");
+
+    // Training Formats
+    public async Task<HttpResponseMessage> CreateTrainingFormat(string name) =>
+        await _httpClient.PostAsJsonAsync("CreateTrainingFormat", new { name });
+
+    public async Task<HttpResponseMessage> UpdateTrainingFormat(int id, string name) =>
+        await _httpClient.PutAsJsonAsync($"UpdateTrainingFormat/{id}", new { name });
+
+    public async Task<HttpResponseMessage> DeleteTrainingFormat(int id) =>
+        await _httpClient.DeleteAsync($"DeleteTrainingFormat/{id}");
 }

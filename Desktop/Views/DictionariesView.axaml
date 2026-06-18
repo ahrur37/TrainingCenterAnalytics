@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             xmlns:vm="using:TCA.Desktop.ViewModels"
+             x:DataType="vm:DictionariesViewModel"
+             x:Class="TCA.Desktop.Views.DictionariesView">
+
+    <StackPanel Margin="20" Spacing="10">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="← Назад" Command="{Binding GoBackCommand}"/>
+            <TextBlock Text="Управление справочниками" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <Grid ColumnDefinitions="*, 20, *, 20, *">
+
+            <!-- Directions -->
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock Text="Направления" FontWeight="Bold" FontSize="14"/>
+                <ListBox ItemsSource="{Binding Directions}"
+                         SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
+                         Height="300"
+                         DisplayMemberBinding="{Binding Name}"/>
+                <TextBox Text="{Binding DirectionName, Mode=TwoWay}" PlaceholderText="Название..."/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Сохранить" Command="{Binding SaveDirectionCommand}" HorizontalAlignment="Stretch"/>
+                    <Button Content="Удалить" Command="{Binding DeleteDirectionCommand}" IsEnabled="{Binding SelectedDirection, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </StackPanel>
+                <TextBlock Text="{Binding DirectionMessage}" Foreground="{Binding DirectionMessageColor}"/>
+            </StackPanel>
+
+            <Separator Grid.Column="1" Width="1"/>
+
+            <!-- Statuses -->
+            <StackPanel Grid.Column="2" Spacing="8">
+                <TextBlock Text="Статусы" FontWeight="Bold" FontSize="14"/>
+                <ListBox ItemsSource="{Binding Statuses}"
+                         SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+                         Height="300"
+                         DisplayMemberBinding="{Binding Name}"/>
+                <TextBox Text="{Binding StatusName, Mode=TwoWay}" PlaceholderText="Название..."/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Сохранить" Command="{Binding SaveStatusCommand}" HorizontalAlignment="Stretch"/>
+                    <Button Content="Удалить" Command="{Binding DeleteStatusCommand}" IsEnabled="{Binding SelectedStatus, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </StackPanel>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}"/>
+            </StackPanel>
+
+            <Separator Grid.Column="3" Width="1"/>
+
+            <!-- Training Formats -->
+            <StackPanel Grid.Column="4" Spacing="8">
+                <TextBlock Text="Форматы обучения" FontWeight="Bold" FontSize="14"/>
+                <ListBox ItemsSource="{Binding TrainingFormats}"
+                         SelectedItem="{Binding SelectedTrainingFormat, Mode=TwoWay}"
+                         Height="300"
+                         DisplayMemberBinding="{Binding Name}"/>
+                <TextBox Text="{Binding TrainingFormatName, Mode=TwoWay}" PlaceholderText="Название..."/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Сохранить" Command="{Binding SaveTrainingFormatCommand}" HorizontalAlignment="Stretch"/>
+                    <Button Content="Удалить" Command="{Binding DeleteTrainingFormatCommand}" IsEnabled="{Binding SelectedTrainingFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </StackPanel>
+                <TextBlock Text="{Binding TrainingFormatMessage}" Foreground="{Binding TrainingFormatMessageColor}"/>
+            </StackPanel>
+
+        </Grid>
+    </StackPanel>
+</UserControl>
