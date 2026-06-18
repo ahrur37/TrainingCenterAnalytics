@@ -29,8 +29,9 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Width="300" Margin="10" Spacing="10">
-            <StackPanel IsVisible="{Binding CanEdit}" Spacing="10">
+        <ScrollViewer Grid.Row="1" Grid.Column="1" Width="300">
+        <StackPanel Margin="10" Spacing="10">
+            <StackPanel IsVisible="{Binding CanChangeStatus}" Spacing="10">
                 <TextBlock Text="Статус заявки" FontWeight="Bold"/>
                 <ComboBox ItemsSource="{Binding Liststatuses}"
                           SelectedItem="{Binding SelectedNewStatus, Mode=TwoWay}"
@@ -52,9 +53,8 @@
                 <TextBlock Text="{Binding AssignMessage}" Foreground="{Binding AssignMessageColor}"/>
             </StackPanel>
 
-            <Separator IsVisible="{Binding CanEdit}"/>
-
             <StackPanel IsVisible="{Binding CanEdit}" Spacing="10">
+                <Separator/>
                 <TextBlock Text="Комментарии" FontWeight="Bold"/>
                 <ListBox ItemsSource="{Binding Listcomments}" Height="200">
                     <ListBox.ItemTemplate>
@@ -72,5 +72,6 @@
                 <TextBlock Text="{Binding ShareStatusMessage}" Foreground="{Binding ShareMessageColor}"/>
             </StackPanel>
         </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -28,20 +28,15 @@ public partial class CreateRequestViewModel : ViewModelBase
         _apiService = apiService;
         _sessionService = sessionService;
         _navigator = navigator;
-        _ = LoadDirections();
-        _ = LoadFormats();
     }
 
-    private async Task LoadDirections()
+    public override async Task OnNavigatedTo()
     {
-        var list = await _apiService.GetDirections();
-        Directions = new ObservableCollection<DirectionModel>(list);
-    }
-
-    private async Task LoadFormats()
-    {
-        var list = await _apiService.GetTrainingFormats();
-        Formats = new ObservableCollection<TrainingFormatModel>(list);
+        var directions = _apiService.GetDirections();
+        var formats = _apiService.GetTrainingFormats();
+        await Task.WhenAll(directions, formats);
+        Directions = new ObservableCollection<DirectionModel>(directions.Result);
+        Formats = new ObservableCollection<TrainingFormatModel>(formats.Result);
     }
 
     [RelayCommand]

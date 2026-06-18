@@ -21,12 +21,11 @@ public partial class RegistrationViewModel : ViewModelBase
     private string _messageColor = "Red";
     
     private readonly ApiService _apiservice;
-    private readonly SessionService _session;
     private readonly INavigator _navigator;
-    public RegistrationViewModel(SessionService session, ApiService apiService, INavigator navigator)
+
+    public RegistrationViewModel(ApiService apiService, INavigator navigator)
     {
         _apiservice = apiService;
-        _session = session;
         _navigator = navigator;
     }
 

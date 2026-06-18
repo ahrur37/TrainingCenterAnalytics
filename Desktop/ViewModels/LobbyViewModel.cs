@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Desktop.Models;
+using Microsoft.Extensions.DependencyInjection;
 using TCA.Desktop.Enums;
 using TCA.Desktop.Services;
 
@@ -20,7 +21,7 @@ public partial class LobbyViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<StatusModel> _liststatuses;
     [ObservableProperty]
-    private ObservableCollection<CommentModel> _listcomments;
+    private ObservableCollection<CommentModel> _listcomments = [];
     [ObservableProperty]
     private DirectionModel? _selectedDirection;
     [ObservableProperty]
@@ -35,6 +36,8 @@ public partial class LobbyViewModel : ViewModelBase
     private bool _canViewAdm = false;
     [ObservableProperty]
     private bool _canEdit = false;
+    [ObservableProperty]
+    private bool _canChangeStatus = false;
     [ObservableProperty]                                                                                                                                                          
     private string _statusMessage = string.Empty;                                                                                                                                 
     [ObservableProperty]                                                                                                                                                          
@@ -67,8 +70,11 @@ public partial class LobbyViewModel : ViewModelBase
         _session = session;
         CanView = (Roles)_session.RoleId != Roles.User;
         CanViewAdm = (Roles)_session.RoleId == Roles.Admin;
-        _ = LoadRequestsAsync();
-        _ = LoadComboboxesAsync();
+    }
+
+    public override async Task OnNavigatedTo()
+    {
+        await Task.WhenAll(LoadRequestsAsync(), LoadComboboxesAsync());
     }
 
     private async Task LoadComboboxesAsync()
@@ -129,20 +135,31 @@ public partial class LobbyViewModel : ViewModelBase
         if (!_isResetting) _ = ApplyFilters(SelectedStatus?.Id, value?.Id);
     }
     
+    private void UpdatePermissions(RequestModel value)
+    {
+        var role = (Roles)_session.RoleId;
+        CanEdit = role == Roles.Admin || role == Roles.Director
+                  || (role == Roles.Manager && value.AssigneeId == _session.UserId)
+                  || (role == Roles.User && value.AuthorId == _session.UserId);
+        CanChangeStatus = role == Roles.Admin || role == Roles.Director
+                  || (role == Roles.Manager && value.AssigneeId == _session.UserId);
+    }
+
     partial void OnSelectedRequestChanged(RequestModel? value)
     {
         if (value != null)
         {
             SelectedNewStatus = Liststatuses?.FirstOrDefault(s => s.Id == value.StatusId);
             _ = LoadCommentsAsync();
-
-            var role = (Roles)_session.RoleId;
-            CanEdit = role == Roles.Admin || role == Roles.Director
-                      || (role == Roles.Manager && value.AssigneeId == _session.UserId);
+            UpdatePermissions(value);
+            StatusMessage = string.Empty;
+            ShareStatusMessage = string.Empty;
+            AssignMessage = string.Empty;
         }
         else
         {
             CanEdit = false;
+            CanChangeStatus = false;
         }
     } 
 
@@ -184,7 +201,6 @@ public partial class LobbyViewModel : ViewModelBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            
         }
         
     }
@@ -196,7 +212,7 @@ public partial class LobbyViewModel : ViewModelBase
 
         var response = await _apiService.AddComment(new CreateCommentModel()
         {
-            Content =  _newComment,
+            Content = NewComment,
             AuthorId =  _session.UserId,
             RequestId = SelectedRequest.Id
         });
@@ -228,32 +244,39 @@ public partial class LobbyViewModel : ViewModelBase
 
         if (response.IsSuccessStatusCode)
         {
+            var requestId = SelectedRequest.Id;
+            await LoadRequestsAsync();
+            var updated = Requests?.FirstOrDefault(r => r.Id == requestId);
+            if (updated != null)
+            {
+                SelectedRequest = updated;
+                UpdatePermissions(updated);
+            }
             AssignMessage = "Назначен";
             AssignMessageColor = "Green";
-            await LoadRequestsAsync();
         }
         else
         {
-            AssignMessage = response.ToString();
+            AssignMessage = await response.Content.ReadAsStringAsync();
             AssignMessageColor = "Red";
         }
     }
 
     [RelayCommand]
-    private async Task GoToCreateRequest()
+    private void GoToCreateRequest()
     {
-        _navigator.NavigateTo(new CreateRequestViewModel(_session, _apiService, _navigator));
+        _navigator.NavigateTo(App.Services.GetRequiredService<CreateRequestViewModel>());
     }
 
     [RelayCommand]
     private void Logout()
     {
-        _navigator.NavigateTo(new LoginViewModel(_session, _apiService, _navigator));
+        _navigator.NavigateTo(App.Services.GetRequiredService<LoginViewModel>());
     }
 
     [RelayCommand]
     private void GoToManuals()
     {
-        _navigator.NavigateTo(new ManualsViewModel());
+        _navigator.NavigateTo(App.Services.GetRequiredService<ManualsViewModel>());
     }
 }
