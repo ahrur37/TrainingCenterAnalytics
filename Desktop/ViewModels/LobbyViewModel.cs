@@ -58,22 +58,27 @@ public partial class LobbyViewModel : ViewModelBase
     private string _assignMessageColor = "Green";
     
 
-    private bool _isResetting; 
+    private bool _isResetting;
+    private int? _currentRequestId;
     private readonly ApiService _apiService;
     private readonly INavigator _navigator;
     private readonly SessionService _session;
+    private readonly SignalRService _signalR;
 
-    public LobbyViewModel(ApiService apiService, SessionService session, INavigator navigator)
+    public LobbyViewModel(ApiService apiService, SessionService session, INavigator navigator, SignalRService signalR)
     {
         _apiService = apiService;
         _navigator = navigator;
         _session = session;
+        _signalR = signalR;
         CanView = (Roles)_session.RoleId != Roles.User;
         CanViewAdm = (Roles)_session.RoleId == Roles.Admin;
+        _signalR.CommentAdded += OnCommentAdded;
     }
 
     public override async Task OnNavigatedTo()
     {
+        await _signalR.StartAsync("http://161.104.32.25");
         await Task.WhenAll(LoadRequestsAsync(), LoadComboboxesAsync());
     }
 
@@ -147,8 +152,14 @@ public partial class LobbyViewModel : ViewModelBase
 
     partial void OnSelectedRequestChanged(RequestModel? value)
     {
+        if (_currentRequestId.HasValue)
+            _ = _signalR.LeaveRequest(_currentRequestId.Value);
+
         if (value != null)
         {
+            _currentRequestId = value.Id;
+            _ = _signalR.JoinRequest(value.Id);
+
             SelectedNewStatus = Liststatuses?.FirstOrDefault(s => s.Id == value.StatusId);
             _ = LoadCommentsAsync();
             UpdatePermissions(value);
@@ -158,10 +169,20 @@ public partial class LobbyViewModel : ViewModelBase
         }
         else
         {
+            _currentRequestId = null;
             CanEdit = false;
             CanChangeStatus = false;
         }
-    } 
+    }
+
+    private void OnCommentAdded(CommentModel comment)
+    {
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (comment.RequestId == _currentRequestId)
+                Listcomments.Add(comment);
+        });
+    }
 
     [RelayCommand]
     private async Task ResetFilters()

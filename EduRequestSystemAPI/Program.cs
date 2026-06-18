@@ -1,4 +1,5 @@
 using EduRequestSystemAPI.DatabaseContext;
+using EduRequestSystemAPI.Hubs;
 using EduRequestSystemAPI.Interfaces;
 using EduRequestSystemAPI.Services;
 using EduRequestSystemAPI.UniversalMethods;
@@ -28,6 +29,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSingleton<jwtGenerator>();
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,5 +45,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<CommentHub>("/hubs/comments");
 
 app.Run();
