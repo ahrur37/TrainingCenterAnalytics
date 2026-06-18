@@ -75,7 +75,7 @@ namespace EduRequestSystemAPI.Services
 
                 if (roleId != 3 && roleId != 4)
                 {
-                    if (request.AssigneeId.HasValue && request.AssigneeId.Value != currentUserId)
+                    if (request.AssigneeId != currentUserId)
                         return new BadRequestObjectResult("Вы не можете изменить статус чужой заявки. Вы не являетесь ответственным менеджером.");
                 }
 
