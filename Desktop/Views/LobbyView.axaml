@@ -30,7 +30,7 @@
         </DataGrid>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Width="300" Margin="10" Spacing="10">
-            <StackPanel IsVisible="{Binding CanView}" Spacing="10">
+            <StackPanel IsVisible="{Binding CanEdit}" Spacing="10">
                 <TextBlock Text="Статус заявки" FontWeight="Bold"/>
                 <ComboBox ItemsSource="{Binding Liststatuses}"
                           SelectedItem="{Binding SelectedNewStatus, Mode=TwoWay}"
@@ -39,7 +39,7 @@
                 <Button Content="Изменить статус" Command="{Binding ChangeStatusCommand}" HorizontalAlignment="Stretch"/>
                 <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding MessageColor}"/>
             </StackPanel>
-            
+
             <Separator IsVisible="{Binding CanView}"/>
 
             <StackPanel IsVisible="{Binding CanView}" Spacing="10">
@@ -52,23 +52,25 @@
                 <TextBlock Text="{Binding AssignMessage}" Foreground="{Binding AssignMessageColor}"/>
             </StackPanel>
 
-            <Separator IsVisible="{Binding CanView}"/>
+            <Separator IsVisible="{Binding CanEdit}"/>
 
-            <TextBlock Text="Комментарии" FontWeight="Bold"/>
-            <ListBox ItemsSource="{Binding Listcomments}" Height="200">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="{Binding Author.Name}" FontWeight="Bold" FontSize="12"/>
-                            <TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
-                            <TextBlock Text="{Binding CreatedAt}" FontSize="11" Foreground="Gray"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <TextBox Text="{Binding NewComment, Mode=TwoWay}" Watermark="Введите комментарий..." Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
-            <Button Content="Отправить" Command="{Binding AddCommentCommand}" HorizontalAlignment="Stretch"/>
-            <TextBlock Text="{Binding ShareStatusMessage}" Foreground="{Binding ShareMessageColor}"/>
+            <StackPanel IsVisible="{Binding CanEdit}" Spacing="10">
+                <TextBlock Text="Комментарии" FontWeight="Bold"/>
+                <ListBox ItemsSource="{Binding Listcomments}" Height="200">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="{Binding Author.Name}" FontWeight="Bold" FontSize="12"/>
+                                <TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding CreatedAt}" FontSize="11" Foreground="Gray"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBox Text="{Binding NewComment, Mode=TwoWay}" Watermark="Введите комментарий..." Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <Button Content="Отправить" Command="{Binding AddCommentCommand}" HorizontalAlignment="Stretch"/>
+                <TextBlock Text="{Binding ShareStatusMessage}" Foreground="{Binding ShareMessageColor}"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

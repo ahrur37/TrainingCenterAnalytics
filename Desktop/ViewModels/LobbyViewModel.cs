@@ -29,10 +29,12 @@ public partial class LobbyViewModel : ViewModelBase
     private StatusModel? _selectedNewStatus;
     [ObservableProperty]
     private RequestModel? _selectedRequest;
-    [ObservableProperty] 
+    [ObservableProperty]
     private bool _canView = false;
-    [ObservableProperty] 
+    [ObservableProperty]
     private bool _canViewAdm = false;
+    [ObservableProperty]
+    private bool _canEdit = false;
     [ObservableProperty]                                                                                                                                                          
     private string _statusMessage = string.Empty;                                                                                                                                 
     [ObservableProperty]                                                                                                                                                          
@@ -127,13 +129,21 @@ public partial class LobbyViewModel : ViewModelBase
         if (!_isResetting) _ = ApplyFilters(SelectedStatus?.Id, value?.Id);
     }
     
-    partial void OnSelectedRequestChanged(RequestModel? value)                                                                                                                    
+    partial void OnSelectedRequestChanged(RequestModel? value)
     {
         if (value != null)
         {
-            SelectedNewStatus = Liststatuses?.FirstOrDefault(s => s.Id == value.StatusId);                                                                                        
-            _ = LoadCommentsAsync();  
-        }                                                                                                                            
+            SelectedNewStatus = Liststatuses?.FirstOrDefault(s => s.Id == value.StatusId);
+            _ = LoadCommentsAsync();
+
+            var role = (Roles)_session.RoleId;
+            CanEdit = role == Roles.Admin || role == Roles.Director
+                      || (role == Roles.Manager && value.AssigneeId == _session.UserId);
+        }
+        else
+        {
+            CanEdit = false;
+        }
     } 
 
     [RelayCommand]
