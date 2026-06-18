@@ -1,9 +1,11 @@
 ﻿using EduRequestSystemAPI.DatabaseContext;
 using EduRequestSystemAPI.Enums;
+using EduRequestSystemAPI.Hubs;
 using EduRequestSystemAPI.Interfaces;
 using EduRequestSystemAPI.Models;
 using EduRequestSystemAPI.Requests;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace EduRequestSystemAPI.Services
@@ -11,10 +13,12 @@ namespace EduRequestSystemAPI.Services
     public class CommentService : ICommentService
     {
         private readonly ContextDb _context;
+        private readonly IHubContext<CommentHub> _hub;
 
-        public CommentService(ContextDb context)
+        public CommentService(ContextDb context, IHubContext<CommentHub> hub)
         {
             _context = context;
+            _hub = hub;
         }
 
         public async Task<IActionResult> AddCommentAsync(CreateComment createCommentModel)
@@ -46,6 +50,17 @@ namespace EduRequestSystemAPI.Services
 
                 _context.AuditLogs.Add(auditLog);
                 await _context.SaveChangesAsync();
+
+                await _hub.Clients
+                    .Group($"request-{newComment.RequestId}")
+                    .SendAsync("CommentAdded", new
+                    {
+                        id = newComment.Id,
+                        content = newComment.Content,
+                        authorId = newComment.AuthorId,
+                        requestId = newComment.RequestId,
+                        createdAt = newComment.CreatedAt
+                    });
 
                 return new OkObjectResult(new { message = "Комментарий успешно добавлен", commentId = newComment.Id });
             }

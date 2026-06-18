@@ -24,6 +24,7 @@ public partial class App : Application
 
         collection.AddSingleton<SessionService>();
         collection.AddSingleton<ApiService>();
+        collection.AddSingleton<SignalRService>();
         collection.AddSingleton<MainWindowViewModel>();
         collection.AddSingleton<INavigator>(p => p.GetRequiredService<MainWindowViewModel>());
 
