@@ -36,7 +36,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPost]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("CreateDirection")]
         public async Task<IActionResult> CreateDirection([FromBody] DictionaryModel model)
         {
@@ -48,7 +48,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPut]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("UpdateDirection/{id}")]
         public async Task<IActionResult> UpdateDirection(int id, [FromBody] DictionaryModel model)
         {
@@ -60,7 +60,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpDelete]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("DeleteDirection/{id}")]
         public async Task<IActionResult> DeleteDirection(int id)
         {
@@ -100,7 +100,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPost]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("CreateTrainingFormat")]
         public async Task<IActionResult> CreateTrainingFormat([FromBody] DictionaryModel model)
         {
@@ -112,7 +112,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPut]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("UpdateTrainingFormat/{id}")]
         public async Task<IActionResult> UpdateTrainingFormat(int id, [FromBody] DictionaryModel model)
         {
@@ -124,7 +124,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpDelete]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("DeleteTrainingFormat/{id}")]
         public async Task<IActionResult> DeleteTrainingFormat(int id)
         {
@@ -136,7 +136,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPost]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("CreateStatus")]
         public async Task<IActionResult> CreateStatus([FromBody] DictionaryModel model)
         {
@@ -148,7 +148,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPut]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("UpdateStatus/{id}")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] DictionaryModel model)
         {
@@ -160,7 +160,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpDelete]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("DeleteStatus/{id}")]
         public async Task<IActionResult> DeleteStatus(int id)
         {
@@ -186,7 +186,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPost]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("CreateRole")]
         public async Task<IActionResult> CreateRole([FromBody] DictionaryModel model)
         {
@@ -198,7 +198,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpPut]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("UpdateRole/{id}")]
         public async Task<IActionResult> UpdateRole(int id, [FromBody] DictionaryModel model)
         {
@@ -210,7 +210,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </summary>
         /// <remarks>Доступно только роли: Администратор (3).</remarks>
         [HttpDelete]
-        [RoleAuthorized(3)]
+        [RoleAuthorized(3, 4)]
         [Route("DeleteRole/{id}")]
         public async Task<IActionResult> DeleteRole(int id)
         {
