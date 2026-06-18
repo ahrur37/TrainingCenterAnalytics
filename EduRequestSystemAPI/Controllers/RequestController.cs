@@ -3,6 +3,7 @@ using EduRequestSystemAPI.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EduRequestSystemAPI.CustomAttributes;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace EduRequestSystemAPI.Controllers
 {
@@ -100,7 +101,11 @@ namespace EduRequestSystemAPI.Controllers
         [Route("ChangeStatus")]
         public async Task<IActionResult> ChangeStatus(int requestId, int newStatusId, int currentUserId)
         {
-            return await _requestService.ChangeStatusAsync(requestId, newStatusId, currentUserId);
+            var token = Request.Headers["Authorization"].FirstOrDefault();
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var roleId = int.Parse(jwt.Claims.First(c => c.Type == "roleId").Value);
+
+            return await _requestService.ChangeStatusAsync(requestId, newStatusId, currentUserId, roleId);
         }
     }
 }

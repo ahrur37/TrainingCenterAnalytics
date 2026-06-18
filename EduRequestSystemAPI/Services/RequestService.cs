@@ -67,15 +67,16 @@ namespace EduRequestSystemAPI.Services
             }
         }
 
-        public async Task<IActionResult> ChangeStatusAsync(int requestId, int newStatusId, int currentUserId)
+        public async Task<IActionResult> ChangeStatusAsync(int requestId, int newStatusId, int currentUserId, int roleId)
         {
             try
             {
                 var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
 
-                if (request.AssigneeId.HasValue && request.AssigneeId.Value != currentUserId)
+                if (roleId != 3 && roleId != 4)
                 {
-                    return new BadRequestObjectResult("Вы не можете изменить статус чужой заявки. Вы не являетесь ответственным менеджером.");
+                    if (request.AssigneeId.HasValue && request.AssigneeId.Value != currentUserId)
+                        return new BadRequestObjectResult("Вы не можете изменить статус чужой заявки. Вы не являетесь ответственным менеджером.");
                 }
 
                 int oldStatusId = request.StatusId;
