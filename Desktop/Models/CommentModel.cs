@@ -12,4 +12,6 @@ public class CommentModel
     public UserModel? Author { get; set; }
 
     public int RequestId { get; set; }
+
+    public DateTime CreatedAtLocal => CreatedAt.ToLocalTime();
 }
