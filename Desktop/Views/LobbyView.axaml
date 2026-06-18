@@ -14,6 +14,7 @@
             <ComboBox ItemsSource="{Binding Liststatuses}" IsVisible="{Binding CanView}" SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" DisplayMemberBinding="{Binding Name}" Width="150"/>
             <Button Content="Reset" Command="{Binding ResetFiltersCommand}" IsVisible="{Binding CanView}"/>
             <Button Content="Manuals" Command="{Binding GoToManualsCommand}" IsVisible="{Binding CanViewAdm}" HorizontalAlignment="Right"/>
+            <Button Content="Справочники" Command="{Binding GoToDictionariesCommand}" IsVisible="{Binding CanManageDictionaries}"/>
         </StackPanel>
 
         <DataGrid ItemsSource="{Binding Requests}" SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1" Grid.Column="0">

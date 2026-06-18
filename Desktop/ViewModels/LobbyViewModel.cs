@@ -35,6 +35,8 @@ public partial class LobbyViewModel : ViewModelBase
     [ObservableProperty]
     private bool _canViewAdm = false;
     [ObservableProperty]
+    private bool _canManageDictionaries = false;
+    [ObservableProperty]
     private bool _canEdit = false;
     [ObservableProperty]
     private bool _canChangeStatus = false;
@@ -73,6 +75,7 @@ public partial class LobbyViewModel : ViewModelBase
         _signalR = signalR;
         CanView = (Roles)_session.RoleId != Roles.User;
         CanViewAdm = (Roles)_session.RoleId == Roles.Admin;
+        CanManageDictionaries = (Roles)_session.RoleId == Roles.Admin || (Roles)_session.RoleId == Roles.Director;
         _signalR.CommentAdded += OnCommentAdded;
     }
 
@@ -299,5 +302,11 @@ public partial class LobbyViewModel : ViewModelBase
     private void GoToManuals()
     {
         _navigator.NavigateTo(App.Services.GetRequiredService<ManualsViewModel>());
+    }
+
+    [RelayCommand]
+    private void GoToDictionaries()
+    {
+        _navigator.NavigateTo(App.Services.GetRequiredService<DictionariesViewModel>());
     }
 }
