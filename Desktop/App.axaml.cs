@@ -1,9 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
-using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using TCA.Desktop.Services;
 using TCA.Desktop.ViewModels;
 using TCA.Desktop.Views;
@@ -12,6 +11,8 @@ namespace TCA.Desktop;
 
 public partial class App : Application
 {
+    public static IServiceProvider Services { get; private set; } = null!;
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -19,14 +20,28 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        var collection = new ServiceCollection();
+
+        collection.AddSingleton<SessionService>();
+        collection.AddSingleton<ApiService>();
+        collection.AddSingleton<MainWindowViewModel>();
+        collection.AddSingleton<INavigator>(p => p.GetRequiredService<MainWindowViewModel>());
+
+        collection.AddTransient<LoginViewModel>();
+        collection.AddTransient<RegistrationViewModel>();
+        collection.AddTransient<LobbyViewModel>();
+        collection.AddTransient<CreateRequestViewModel>();
+        collection.AddTransient<ManualsViewModel>();
+
+        Services = collection.BuildServiceProvider();
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var sessionservice = new SessionService();
-            var apiservice = new ApiService(sessionservice);
-            var mainvm = new MainWindowViewModel(sessionservice, apiservice);
+            var mainVm = Services.GetRequiredService<MainWindowViewModel>();
+            mainVm.CurrentView = Services.GetRequiredService<LoginViewModel>();
             desktop.MainWindow = new MainWindow
             {
-                DataContext = mainvm
+                DataContext = mainVm
             };
         }
 

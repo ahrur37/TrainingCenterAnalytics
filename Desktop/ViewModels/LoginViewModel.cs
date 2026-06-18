@@ -1,7 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using TCA.Desktop.Models;
 using TCA.Desktop.Services;
 
@@ -9,21 +9,15 @@ namespace TCA.Desktop.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private string _login;
-    [ObservableProperty]
-    private string _password;
-    [ObservableProperty]
-    private string _errorMessage;
-    [ObservableProperty]
-    private ViewModelBase _currentView;
-    
+    [ObservableProperty] private string _login = string.Empty;
+    [ObservableProperty] private string _password = string.Empty;
+    [ObservableProperty] private string _errorMessage = string.Empty;
+
     private readonly ApiService _apiservice;
-    private readonly SessionService _session;
     private readonly INavigator _navigator;
-    public LoginViewModel(SessionService session, ApiService apiservice, INavigator navigator)
+
+    public LoginViewModel(ApiService apiservice, INavigator navigator)
     {
-        _session = session;
         _apiservice = apiservice;
         _navigator = navigator;
     }
@@ -38,7 +32,7 @@ public partial class LoginViewModel : ViewModelBase
         });
         if (response.IsSuccessStatusCode)
         {
-            _navigator.NavigateTo(new LobbyViewModel(_apiservice, _session, _navigator));
+            _navigator.NavigateTo(App.Services.GetRequiredService<LobbyViewModel>());
         }
         else
         {
@@ -47,8 +41,8 @@ public partial class LoginViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task GoToRegistration()
+    private void GoToRegistration()
     {
-        _navigator.NavigateTo(new RegistrationViewModel(_session, _apiservice,  _navigator));
+        _navigator.NavigateTo(App.Services.GetRequiredService<RegistrationViewModel>());
     }
 }
