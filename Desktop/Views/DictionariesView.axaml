@@ -2,70 +2,132 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640"
              xmlns:vm="using:TCA.Desktop.ViewModels"
              x:DataType="vm:DictionariesViewModel"
              x:Class="TCA.Desktop.Views.DictionariesView">
 
-    <StackPanel Margin="20" Spacing="10">
-        <StackPanel Orientation="Horizontal" Spacing="10">
-            <Button Content="Назад" Command="{Binding GoBackCommand}"/>
-            <TextBlock Text="Управление справочниками" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
-        </StackPanel>
+    <Grid RowDefinitions="Auto, *" Background="#F0F2F5">
 
-        <Grid ColumnDefinitions="*, 20, *, 20, *">
-            <StackPanel Grid.Column="0" Spacing="8">
-                <TextBlock Text="Направления" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
-                
-                <ListBox ItemsSource="{Binding Directions}"
-                         SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
-                         Height="300"
-                         DisplayMemberBinding="{Binding Name}"/>
-                <TextBox Text="{Binding DirectionName, Mode=TwoWay}" PlaceholderText="Название..."/>
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button Content="Сохранить" Command="{Binding SaveDirectionCommand}" HorizontalAlignment="Stretch"/>
-                    <Button Content="Удалить" Command="{Binding DeleteDirectionCommand}" IsEnabled="{Binding SelectedDirection, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-                    <Button Content="Добавить" Command="{Binding NewDirectionCommand}"/>
+        <!-- Header -->
+        <Border Grid.Row="0" Background="White" BoxShadow="0 1 4 0 #14000000" Padding="20,12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Border Background="#5C6BC0" CornerRadius="8" Width="34" Height="34">
+                        <TextBlock Text="📋" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Управление справочниками" FontSize="17" FontWeight="SemiBold"
+                               Foreground="#212121" VerticalAlignment="Center"/>
                 </StackPanel>
-                <TextBlock Text="{Binding DirectionMessage}" Foreground="{Binding DirectionMessageColor}"/>
-            </StackPanel>
+                <Button Grid.Column="2" Classes="ghost" Content="← Назад"
+                        Command="{Binding GoBackCommand}" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
 
-            <Separator Grid.Column="1" Width="1"/>
+        <!-- Cards -->
+        <ScrollViewer Grid.Row="1" Padding="24">
+            <Grid ColumnDefinitions="*, 16, *, 16, *">
 
-            <StackPanel Grid.Column="2" Spacing="8">
-                <TextBlock Text="Статусы" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
-                
-                <ListBox ItemsSource="{Binding Statuses}"
-                         SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
-                         Height="300"
-                         DisplayMemberBinding="{Binding Name}"/>
-                <TextBox Text="{Binding StatusName, Mode=TwoWay}" PlaceholderText="Название..."/>
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button Content="Сохранить" Command="{Binding SaveStatusCommand}" HorizontalAlignment="Stretch"/>
-                    <Button Content="Удалить" Command="{Binding DeleteStatusCommand}" IsEnabled="{Binding SelectedStatus, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-                    <Button Content="Добавить" Command="{Binding NewStatusCommand}"/>
-                </StackPanel>
-                <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}"/>
-            </StackPanel>
+                <!-- Directions -->
+                <Border Grid.Column="0" Classes="card">
+                    <StackPanel Spacing="14">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Border Background="#E8EAF6" CornerRadius="6" Padding="8,4">
+                                <TextBlock Text="🧭" FontSize="16"/>
+                            </Border>
+                            <TextBlock Text="Направления" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="#212121" VerticalAlignment="Center"/>
+                        </StackPanel>
 
-            <Separator Grid.Column="3" Width="1"/>
+                        <ListBox ItemsSource="{Binding Directions}"
+                                 SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
+                                 Height="280"
+                                 DisplayMemberBinding="{Binding Name}"/>
 
-            <StackPanel Grid.Column="4" Spacing="8">
-                <TextBlock Text="Форматы обучения" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
-                
-                <ListBox ItemsSource="{Binding TrainingFormats}"
-                         SelectedItem="{Binding SelectedTrainingFormat, Mode=TwoWay}"
-                         Height="300"
-                         DisplayMemberBinding="{Binding Name}"/>
-                <TextBox Text="{Binding TrainingFormatName, Mode=TwoWay}" PlaceholderText="Название..."/>
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button Content="Сохранить" Command="{Binding SaveTrainingFormatCommand}" HorizontalAlignment="Stretch"/>
-                    <Button Content="Удалить" Command="{Binding DeleteTrainingFormatCommand}" IsEnabled="{Binding SelectedTrainingFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-                    <Button Content="Добавить" Command="{Binding NewTrainingFormatCommand}"/>
-                </StackPanel>
-                <TextBlock Text="{Binding TrainingFormatMessage}" Foreground="{Binding TrainingFormatMessageColor}"/>
-            </StackPanel>
+                        <TextBox Text="{Binding DirectionName, Mode=TwoWay}" PlaceholderText="Введите название..."/>
 
-        </Grid>
-    </StackPanel>
+                        <Grid ColumnDefinitions="*, 8, Auto, 8, Auto">
+                            <Button Grid.Column="0" Classes="primary" Content="Сохранить"
+                                    Command="{Binding SaveDirectionCommand}" HorizontalAlignment="Stretch"/>
+                            <Button Grid.Column="2" Classes="success" Content="Добавить"
+                                    Command="{Binding NewDirectionCommand}"/>
+                            <Button Grid.Column="4" Classes="danger" Content="Удалить"
+                                    Command="{Binding DeleteDirectionCommand}"
+                                    IsEnabled="{Binding SelectedDirection, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding DirectionMessage}" Foreground="{Binding DirectionMessageColor}"
+                                   FontSize="12" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Statuses -->
+                <Border Grid.Column="2" Classes="card">
+                    <StackPanel Spacing="14">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Border Background="#E8F5E9" CornerRadius="6" Padding="8,4">
+                                <TextBlock Text="🏷️" FontSize="16"/>
+                            </Border>
+                            <TextBlock Text="Статусы" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="#212121" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <ListBox ItemsSource="{Binding Statuses}"
+                                 SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+                                 Height="280"
+                                 DisplayMemberBinding="{Binding Name}"/>
+
+                        <TextBox Text="{Binding StatusName, Mode=TwoWay}" PlaceholderText="Введите название..."/>
+
+                        <Grid ColumnDefinitions="*, 8, Auto, 8, Auto">
+                            <Button Grid.Column="0" Classes="primary" Content="Сохранить"
+                                    Command="{Binding SaveStatusCommand}" HorizontalAlignment="Stretch"/>
+                            <Button Grid.Column="2" Classes="success" Content="Добавить"
+                                    Command="{Binding NewStatusCommand}"/>
+                            <Button Grid.Column="4" Classes="danger" Content="Удалить"
+                                    Command="{Binding DeleteStatusCommand}"
+                                    IsEnabled="{Binding SelectedStatus, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}"
+                                   FontSize="12" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Training Formats -->
+                <Border Grid.Column="4" Classes="card">
+                    <StackPanel Spacing="14">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Border Background="#FFF3E0" CornerRadius="6" Padding="8,4">
+                                <TextBlock Text="📚" FontSize="16"/>
+                            </Border>
+                            <TextBlock Text="Форматы обучения" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="#212121" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <ListBox ItemsSource="{Binding TrainingFormats}"
+                                 SelectedItem="{Binding SelectedTrainingFormat, Mode=TwoWay}"
+                                 Height="280"
+                                 DisplayMemberBinding="{Binding Name}"/>
+
+                        <TextBox Text="{Binding TrainingFormatName, Mode=TwoWay}" PlaceholderText="Введите название..."/>
+
+                        <Grid ColumnDefinitions="*, 8, Auto, 8, Auto">
+                            <Button Grid.Column="0" Classes="primary" Content="Сохранить"
+                                    Command="{Binding SaveTrainingFormatCommand}" HorizontalAlignment="Stretch"/>
+                            <Button Grid.Column="2" Classes="success" Content="Добавить"
+                                    Command="{Binding NewTrainingFormatCommand}"/>
+                            <Button Grid.Column="4" Classes="danger" Content="Удалить"
+                                    Command="{Binding DeleteTrainingFormatCommand}"
+                                    IsEnabled="{Binding SelectedTrainingFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                        </Grid>
+
+                        <TextBlock Text="{Binding TrainingFormatMessage}" Foreground="{Binding TrainingFormatMessageColor}"
+                                   FontSize="12" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
