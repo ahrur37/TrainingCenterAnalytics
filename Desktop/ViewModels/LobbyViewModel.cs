@@ -298,11 +298,7 @@ public partial class LobbyViewModel : ViewModelBase
         _navigator.NavigateTo(App.Services.GetRequiredService<LoginViewModel>());
     }
 
-    [RelayCommand]
-    private void GoToManuals()
-    {
-        _navigator.NavigateTo(App.Services.GetRequiredService<ManualsViewModel>());
-    }
+    
 
     [RelayCommand]
     private void GoToDictionaries()
