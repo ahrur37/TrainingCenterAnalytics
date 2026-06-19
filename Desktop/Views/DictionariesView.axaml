@@ -9,15 +9,14 @@
 
     <StackPanel Margin="20" Spacing="10">
         <StackPanel Orientation="Horizontal" Spacing="10">
-            <Button Content="← Назад" Command="{Binding GoBackCommand}"/>
+            <Button Content="Назад" Command="{Binding GoBackCommand}"/>
             <TextBlock Text="Управление справочниками" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
         </StackPanel>
 
         <Grid ColumnDefinitions="*, 20, *, 20, *">
-
-            <!-- Directions -->
             <StackPanel Grid.Column="0" Spacing="8">
-                <TextBlock Text="Направления" FontWeight="Bold" FontSize="14"/>
+                <TextBlock Text="Направления" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                
                 <ListBox ItemsSource="{Binding Directions}"
                          SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
                          Height="300"
@@ -26,15 +25,16 @@
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button Content="Сохранить" Command="{Binding SaveDirectionCommand}" HorizontalAlignment="Stretch"/>
                     <Button Content="Удалить" Command="{Binding DeleteDirectionCommand}" IsEnabled="{Binding SelectedDirection, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    <Button Content="Добавить" Command="{Binding NewDirectionCommand}"/>
                 </StackPanel>
                 <TextBlock Text="{Binding DirectionMessage}" Foreground="{Binding DirectionMessageColor}"/>
             </StackPanel>
 
             <Separator Grid.Column="1" Width="1"/>
 
-            <!-- Statuses -->
             <StackPanel Grid.Column="2" Spacing="8">
-                <TextBlock Text="Статусы" FontWeight="Bold" FontSize="14"/>
+                <TextBlock Text="Статусы" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                
                 <ListBox ItemsSource="{Binding Statuses}"
                          SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
                          Height="300"
@@ -43,15 +43,16 @@
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button Content="Сохранить" Command="{Binding SaveStatusCommand}" HorizontalAlignment="Stretch"/>
                     <Button Content="Удалить" Command="{Binding DeleteStatusCommand}" IsEnabled="{Binding SelectedStatus, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    <Button Content="Добавить" Command="{Binding NewStatusCommand}"/>
                 </StackPanel>
                 <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding StatusMessageColor}"/>
             </StackPanel>
 
             <Separator Grid.Column="3" Width="1"/>
 
-            <!-- Training Formats -->
             <StackPanel Grid.Column="4" Spacing="8">
-                <TextBlock Text="Форматы обучения" FontWeight="Bold" FontSize="14"/>
+                <TextBlock Text="Форматы обучения" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                
                 <ListBox ItemsSource="{Binding TrainingFormats}"
                          SelectedItem="{Binding SelectedTrainingFormat, Mode=TwoWay}"
                          Height="300"
@@ -60,6 +61,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button Content="Сохранить" Command="{Binding SaveTrainingFormatCommand}" HorizontalAlignment="Stretch"/>
                     <Button Content="Удалить" Command="{Binding DeleteTrainingFormatCommand}" IsEnabled="{Binding SelectedTrainingFormat, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    <Button Content="Добавить" Command="{Binding NewTrainingFormatCommand}"/>
                 </StackPanel>
                 <TextBlock Text="{Binding TrainingFormatMessage}" Foreground="{Binding TrainingFormatMessageColor}"/>
             </StackPanel>
