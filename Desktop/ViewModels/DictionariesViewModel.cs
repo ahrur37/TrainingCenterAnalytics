@@ -65,8 +65,6 @@ public partial class DictionariesViewModel : ViewModelBase
     partial void OnSelectedTrainingFormatChanged(TrainingFormatModel? value) =>
         TrainingFormatName = value?.Name ?? string.Empty;
 
-    // --- Directions ---
-
     [RelayCommand]
     private async Task SaveDirection()
     {
@@ -111,8 +109,6 @@ public partial class DictionariesViewModel : ViewModelBase
             DirectionMessageColor = "Red";
         }
     }
-
-    // --- Statuses ---
 
     [RelayCommand]
     private async Task SaveStatus()
@@ -159,8 +155,6 @@ public partial class DictionariesViewModel : ViewModelBase
         }
     }
 
-    // --- Training Formats ---
-
     [RelayCommand]
     private async Task SaveTrainingFormat()
     {
@@ -202,6 +196,63 @@ public partial class DictionariesViewModel : ViewModelBase
         else
         {
             TrainingFormatMessage = "Ошибка удаления";
+            TrainingFormatMessageColor = "Red";
+        }
+    }
+
+    [RelayCommand]
+    private async Task NewStatus()
+    {
+        if (string.IsNullOrEmpty(StatusName)) return;
+        var response = await _apiService.CreateStatus(StatusName);
+        if (response.IsSuccessStatusCode)
+        {
+            StatusMessage = "Создано";
+            StatusMessageColor = "Green";
+            StatusName = string.Empty;
+            Statuses = new ObservableCollection<StatusModel>(await _apiService.GetStatuses());
+        }
+        else
+        {
+            StatusMessage = "Ошибка";
+            StatusMessageColor = "Red";
+        }
+    }
+
+    [RelayCommand]
+    private async Task NewDirection()
+    {
+        if (string.IsNullOrEmpty(DirectionName)) return;
+        var response = await _apiService.CreateDirection(DirectionName);
+        if (response.IsSuccessStatusCode)
+        {
+            DirectionMessage = "Создано";
+            DirectionMessageColor = "Green";
+            DirectionName = string.Empty;
+            Directions = new ObservableCollection<DirectionModel>(await _apiService.GetDirections());
+        }
+        else
+        {
+            DirectionMessage = "Ошибка";
+            DirectionMessageColor = "Red";
+        }
+    }
+
+    [RelayCommand]
+    private async Task NewTrainingFormat()
+    {
+        if (string.IsNullOrEmpty(TrainingFormatName)) return;
+        var response = await _apiService.CreateTrainingFormat(TrainingFormatName);
+        if (response.IsSuccessStatusCode)
+        {
+            TrainingFormatMessage = "Создано";
+            TrainingFormatMessageColor = "Green";
+            TrainingFormatName = string.Empty;
+            TrainingFormats = new ObservableCollection<TrainingFormatModel>(await _apiService.GetTrainingFormats());
+        }
+        else
+        {
+            TrainingFormatMessage = "Ошибка";
             TrainingFormatMessageColor = "Red";
         }
     }
