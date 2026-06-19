@@ -7,28 +7,52 @@
              x:Class="TCA.Desktop.Views.LoginView"
              x:DataType="vm:LoginViewModel">
 
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="320">
-        <StackPanel Spacing="12">
+    <Grid Background="#F0F2F5">
+        <Border Classes="card" Width="360" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Spacing="20">
 
-            <TextBlock Text="Sign In" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <!-- Logo / Title -->
+                <StackPanel Spacing="6" HorizontalAlignment="Center">
+                    <Border Background="#5C6BC0" CornerRadius="12" Width="48" Height="48"
+                            HorizontalAlignment="Center">
+                        <TextBlock Text="🎓" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Учебный центр" FontSize="22" FontWeight="Bold"
+                               Foreground="#212121" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Войдите в свой аккаунт" FontSize="13"
+                               Foreground="#757575" HorizontalAlignment="Center"/>
+                </StackPanel>
 
-            <StackPanel Spacing="4">
-                <TextBlock Text="Login"/>
-                <TextBox Text="{Binding Login}" Watermark="Enter login"/>
+                <Separator/>
+
+                <!-- Fields -->
+                <StackPanel Spacing="14">
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="label" Text="Логин"/>
+                        <TextBox Text="{Binding Login}" Watermark="Введите логин"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="label" Text="Пароль"/>
+                        <TextBox Text="{Binding Password}" PasswordChar="•" Watermark="Введите пароль"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF5350" FontSize="13"
+                           HorizontalAlignment="Center"
+                           IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                <StackPanel Spacing="8">
+                    <Button Classes="primary" Content="Войти"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Command="{Binding AuthorizationCommand}"/>
+                    <Button Classes="ghost" Content="Зарегистрироваться"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Command="{Binding GoToRegistrationCommand}"/>
+                </StackPanel>
+
             </StackPanel>
-
-            <StackPanel Spacing="4">
-                <TextBlock Text="Password"/>
-                <TextBox Text="{Binding Password}" PasswordChar="*" Watermark="Enter your password"/>
-            </StackPanel>
-
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-
-            <Button Content="Sign In" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding AuthorizationCommand}"/>
-
-            <Button Content="Sign Up" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding GoToRegistrationCommand}"/>
-
-        </StackPanel>
+        </Border>
     </Grid>
 
 </UserControl>

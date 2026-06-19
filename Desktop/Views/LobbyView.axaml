@@ -2,76 +2,147 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="650"
              xmlns:vm="using:TCA.Desktop.ViewModels"
              x:DataType="vm:LobbyViewModel"
              x:Class="TCA.Desktop.Views.LobbyView">
-    <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, *">
-        <StackPanel Orientation="Horizontal" Spacing="30" Margin="10" Grid.ColumnSpan="2">
-            <Button Content="Log out" Command="{Binding LogoutCommand}"/>
-            <Button Content="Create request" Command="{Binding GoToCreateRequestCommand}"/>
-            <ComboBox ItemsSource="{Binding Listdirections}" IsVisible="{Binding CanView}" SelectedItem="{Binding SelectedDirection, Mode=TwoWay}" DisplayMemberBinding="{Binding Name}" Width="150"/>
-            <ComboBox ItemsSource="{Binding Liststatuses}" IsVisible="{Binding CanView}" SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" DisplayMemberBinding="{Binding Name}" Width="150"/>
-            <Button Content="Reset" Command="{Binding ResetFiltersCommand}" IsVisible="{Binding CanView}"/>
-            <Button Content="Справочники" Command="{Binding GoToDictionariesCommand}" IsVisible="{Binding CanManageDictionaries}"/>
-        </StackPanel>
 
-        <DataGrid ItemsSource="{Binding Requests}" SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1" Grid.Column="0">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="№"           Binding="{Binding Id}"                  Width="50" />
-                <DataGridTextColumn Header="Тема"        Binding="{Binding Topic}"                Width="200" />
-                <DataGridTextColumn Header="Описание"    Binding="{Binding Description}"          Width="250" />
-                <DataGridTextColumn Header="Направление" Binding="{Binding Direction.Name}"       Width="150" />
-                <DataGridTextColumn Header="Формат"      Binding="{Binding TrainingFormat.Name}"  Width="120" />
-                <DataGridTextColumn Header="Статус"      Binding="{Binding Status.Name}"          Width="120" />
-                <DataGridTextColumn Header="Создана"     Binding="{Binding CreatedAt}"            Width="130" />
-                <DataGridTextColumn Header="Менеджер"    Binding="{Binding Assignee.Name}"        Width="130" />
-            </DataGrid.Columns>
-        </DataGrid>
+    <Grid RowDefinitions="Auto, *" Background="#F0F2F5">
 
-        <ScrollViewer Grid.Row="1" Grid.Column="1" Width="300">
-        <StackPanel Margin="10" Spacing="10">
-            <StackPanel IsVisible="{Binding CanChangeStatus}" Spacing="10">
-                <TextBlock Text="Статус заявки" FontWeight="Bold"/>
-                <ComboBox ItemsSource="{Binding Liststatuses}"
-                          SelectedItem="{Binding SelectedNewStatus, Mode=TwoWay}"
-                          DisplayMemberBinding="{Binding Name}"
-                          Width="280"/>
-                <Button Content="Изменить статус" Command="{Binding ChangeStatusCommand}" HorizontalAlignment="Stretch"/>
-                <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding MessageColor}"/>
-            </StackPanel>
+        <!-- Top bar -->
+        <Border Grid.Row="0" Background="White" BoxShadow="0 1 4 0 #14000000" Padding="20,12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
 
-            <Separator IsVisible="{Binding CanView}"/>
+                <!-- Left: title -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Border Background="#5C6BC0" CornerRadius="8" Width="34" Height="34">
+                        <TextBlock Text="🎓" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Учебный центр" FontSize="17" FontWeight="SemiBold"
+                               Foreground="#212121" VerticalAlignment="Center"/>
+                </StackPanel>
 
-            <StackPanel IsVisible="{Binding CanView}" Spacing="10">
-                <TextBlock Text="Ответственный" FontWeight="Bold"/>
-                <ComboBox ItemsSource="{Binding ListManagers}"
-                          SelectedItem="{Binding SelectedManager, Mode=TwoWay}"
-                          DisplayMemberBinding="{Binding Name}"
-                          Width="280"/>
-                <Button Content="Назначить" Command="{Binding AssignManagerCommand}" HorizontalAlignment="Stretch"/>
-                <TextBlock Text="{Binding AssignMessage}" Foreground="{Binding AssignMessageColor}"/>
-            </StackPanel>
+                <!-- Center: filters -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            IsVisible="{Binding CanView}">
+                    <ComboBox ItemsSource="{Binding Listdirections}"
+                              SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
+                              DisplayMemberBinding="{Binding Name}"
+                              PlaceholderText="Направление"
+                              Width="160"/>
+                    <ComboBox ItemsSource="{Binding Liststatuses}"
+                              SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+                              DisplayMemberBinding="{Binding Name}"
+                              PlaceholderText="Статус"
+                              Width="140"/>
+                    <Button Classes="ghost" Content="Сбросить" Command="{Binding ResetFiltersCommand}"/>
+                </StackPanel>
 
-            <StackPanel IsVisible="{Binding CanEdit}" Spacing="10">
-                <Separator/>
-                <TextBlock Text="Комментарии" FontWeight="Bold"/>
-                <ListBox ItemsSource="{Binding Listcomments}" Height="200">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Spacing="2">
-                                <TextBlock Text="{Binding Author.Name}" FontWeight="Bold" FontSize="12"/>
-                                <TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
-                                <TextBlock Text="{Binding CreatedAtLocal}" FontSize="11" Foreground="Gray"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <TextBox Text="{Binding NewComment, Mode=TwoWay}" Watermark="Введите комментарий..." Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
-                <Button Content="Отправить" Command="{Binding AddCommentCommand}" HorizontalAlignment="Stretch"/>
-                <TextBlock Text="{Binding ShareStatusMessage}" Foreground="{Binding ShareMessageColor}"/>
-            </StackPanel>
-        </StackPanel>
-        </ScrollViewer>
+                <!-- Right: actions -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Button Classes="primary" Content="+ Новая заявка"
+                            Command="{Binding GoToCreateRequestCommand}"/>
+                    <Button Classes="ghost" Content="Справочники"
+                            Command="{Binding GoToDictionariesCommand}"
+                            IsVisible="{Binding CanManageDictionaries}"/>
+                    <Button Classes="danger" Content="Выйти" Command="{Binding LogoutCommand}"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="*, 16, 300">
+
+            <!-- Table -->
+            <Border Grid.Column="0" Margin="16,16,0,16" Classes="card" Padding="0">
+                <DataGrid ItemsSource="{Binding Requests}"
+                          SelectedItem="{Binding SelectedRequest, Mode=TwoWay}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CornerRadius="12">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="№"           Binding="{Binding Id}"                  Width="50"/>
+                        <DataGridTextColumn Header="Тема"        Binding="{Binding Topic}"                Width="200"/>
+                        <DataGridTextColumn Header="Описание"    Binding="{Binding Description}"          Width="200"/>
+                        <DataGridTextColumn Header="Направление" Binding="{Binding Direction.Name}"       Width="140"/>
+                        <DataGridTextColumn Header="Формат"      Binding="{Binding TrainingFormat.Name}"  Width="120"/>
+                        <DataGridTextColumn Header="Статус"      Binding="{Binding Status.Name}"          Width="110"/>
+                        <DataGridTextColumn Header="Создана"     Binding="{Binding CreatedAt}"            Width="120"/>
+                        <DataGridTextColumn Header="Менеджер"    Binding="{Binding Assignee.Name}"        Width="120"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <!-- Sidebar -->
+            <ScrollViewer Grid.Column="2" Margin="0,16,16,16">
+                <StackPanel Spacing="12">
+
+                    <!-- Status change -->
+                    <Border Classes="card" IsVisible="{Binding CanChangeStatus}">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Изменить статус" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
+                            <ComboBox ItemsSource="{Binding Liststatuses}"
+                                      SelectedItem="{Binding SelectedNewStatus, Mode=TwoWay}"
+                                      DisplayMemberBinding="{Binding Name}"
+                                      HorizontalAlignment="Stretch"/>
+                            <Button Classes="primary" Content="Применить"
+                                    Command="{Binding ChangeStatusCommand}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <TextBlock Text="{Binding StatusMessage}" Foreground="{Binding MessageColor}"
+                                       FontSize="12" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Assign manager -->
+                    <Border Classes="card" IsVisible="{Binding CanView}">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Ответственный" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
+                            <ComboBox ItemsSource="{Binding ListManagers}"
+                                      SelectedItem="{Binding SelectedManager, Mode=TwoWay}"
+                                      DisplayMemberBinding="{Binding Name}"
+                                      HorizontalAlignment="Stretch"/>
+                            <Button Classes="success" Content="Назначить"
+                                    Command="{Binding AssignManagerCommand}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <TextBlock Text="{Binding AssignMessage}" Foreground="{Binding AssignMessageColor}"
+                                       FontSize="12" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Comments -->
+                    <Border Classes="card" IsVisible="{Binding CanEdit}">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Комментарии" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
+                            <ListBox ItemsSource="{Binding Listcomments}" Height="180" BorderThickness="0" Background="Transparent">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#F5F6FF" CornerRadius="6" Padding="10,8" Margin="0,2">
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="{Binding Author.Name}" FontWeight="SemiBold" FontSize="12" Foreground="#5C6BC0"/>
+                                                <TextBlock Text="{Binding Content}" TextWrapping="Wrap" FontSize="13"/>
+                                                <TextBlock Text="{Binding CreatedAtLocal}" FontSize="11" Foreground="#9E9E9E"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <TextBox Text="{Binding NewComment, Mode=TwoWay}"
+                                     Watermark="Введите комментарий..."
+                                     Height="64" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            <Button Classes="primary" Content="Отправить"
+                                    Command="{Binding AddCommentCommand}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <TextBlock Text="{Binding ShareStatusMessage}" Foreground="{Binding ShareMessageColor}"
+                                       FontSize="12" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
     </Grid>
+
 </UserControl>
