@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -51,9 +52,9 @@ public partial class DictionariesViewModel : ViewModelBase
         var s = _apiService.GetStatuses();
         var f = _apiService.GetTrainingFormats();
         await Task.WhenAll(d, s, f);
-        Directions = new ObservableCollection<DirectionModel>(d.Result);
-        Statuses = new ObservableCollection<StatusModel>(s.Result);
-        TrainingFormats = new ObservableCollection<TrainingFormatModel>(f.Result);
+        Directions = new ObservableCollection<DirectionModel>(d.Result.Where(x => x.IsActive));
+        Statuses = new ObservableCollection<StatusModel>(s.Result.Where(x => x.IsActive));
+        TrainingFormats = new ObservableCollection<TrainingFormatModel>(f.Result.Where(x => x.IsActive));
     }
 
     partial void OnSelectedDirectionChanged(DirectionModel? value) =>
@@ -80,7 +81,7 @@ public partial class DictionariesViewModel : ViewModelBase
             DirectionMessageColor = "Green";
             DirectionName = string.Empty;
             SelectedDirection = null;
-            Directions = new ObservableCollection<DirectionModel>(await _apiService.GetDirections());
+            Directions = new ObservableCollection<DirectionModel>((await _apiService.GetDirections()).Where(x => x.IsActive));
         }
         else
         {
@@ -101,7 +102,7 @@ public partial class DictionariesViewModel : ViewModelBase
             DirectionMessageColor = "Green";
             SelectedDirection = null;
             DirectionName = string.Empty;
-            Directions = new ObservableCollection<DirectionModel>(await _apiService.GetDirections());
+            Directions = new ObservableCollection<DirectionModel>((await _apiService.GetDirections()).Where(x => x.IsActive));
         }
         else
         {
@@ -125,7 +126,7 @@ public partial class DictionariesViewModel : ViewModelBase
             StatusMessageColor = "Green";
             StatusName = string.Empty;
             SelectedStatus = null;
-            Statuses = new ObservableCollection<StatusModel>(await _apiService.GetStatuses());
+            Statuses = new ObservableCollection<StatusModel>((await _apiService.GetStatuses()).Where(x => x.IsActive));
         }
         else
         {
@@ -146,7 +147,7 @@ public partial class DictionariesViewModel : ViewModelBase
             StatusMessageColor = "Green";
             SelectedStatus = null;
             StatusName = string.Empty;
-            Statuses = new ObservableCollection<StatusModel>(await _apiService.GetStatuses());
+            Statuses = new ObservableCollection<StatusModel>((await _apiService.GetStatuses()).Where(x => x.IsActive));
         }
         else
         {
@@ -170,7 +171,7 @@ public partial class DictionariesViewModel : ViewModelBase
             TrainingFormatMessageColor = "Green";
             TrainingFormatName = string.Empty;
             SelectedTrainingFormat = null;
-            TrainingFormats = new ObservableCollection<TrainingFormatModel>(await _apiService.GetTrainingFormats());
+            TrainingFormats = new ObservableCollection<TrainingFormatModel>((await _apiService.GetTrainingFormats()).Where(x => x.IsActive));
         }
         else
         {
@@ -191,7 +192,7 @@ public partial class DictionariesViewModel : ViewModelBase
             TrainingFormatMessageColor = "Green";
             SelectedTrainingFormat = null;
             TrainingFormatName = string.Empty;
-            TrainingFormats = new ObservableCollection<TrainingFormatModel>(await _apiService.GetTrainingFormats());
+            TrainingFormats = new ObservableCollection<TrainingFormatModel>((await _apiService.GetTrainingFormats()).Where(x => x.IsActive));
         }
         else
         {
@@ -210,7 +211,7 @@ public partial class DictionariesViewModel : ViewModelBase
             StatusMessage = "Создано";
             StatusMessageColor = "Green";
             StatusName = string.Empty;
-            Statuses = new ObservableCollection<StatusModel>(await _apiService.GetStatuses());
+            Statuses = new ObservableCollection<StatusModel>((await _apiService.GetStatuses()).Where(x => x.IsActive));
         }
         else
         {
@@ -229,7 +230,7 @@ public partial class DictionariesViewModel : ViewModelBase
             DirectionMessage = "Создано";
             DirectionMessageColor = "Green";
             DirectionName = string.Empty;
-            Directions = new ObservableCollection<DirectionModel>(await _apiService.GetDirections());
+            Directions = new ObservableCollection<DirectionModel>((await _apiService.GetDirections()).Where(x => x.IsActive));
         }
         else
         {
@@ -248,7 +249,7 @@ public partial class DictionariesViewModel : ViewModelBase
             TrainingFormatMessage = "Создано";
             TrainingFormatMessageColor = "Green";
             TrainingFormatName = string.Empty;
-            TrainingFormats = new ObservableCollection<TrainingFormatModel>(await _apiService.GetTrainingFormats());
+            TrainingFormats = new ObservableCollection<TrainingFormatModel>((await _apiService.GetTrainingFormats()).Where(x => x.IsActive));
         }
         else
         {

@@ -203,33 +203,25 @@ public partial class LobbyViewModel : ViewModelBase
     [RelayCommand]
     private async Task ChangeStatus()
     {
-        try
-        {
-            if (SelectedRequest == null || SelectedNewStatus == null) return; 
+        if (SelectedRequest == null || SelectedNewStatus == null) return; 
         
-            var response = await _apiService.ChangeStatus(new ChangeStatusModel()
-            {
-                RequestId = SelectedRequest.Id,
-                NewStatusId = SelectedNewStatus.Id,
-                CurrentUserId =  _session.UserId
-            });
-            if (response.IsSuccessStatusCode)
-            {
-                StatusMessage = "Success";
-                MessageColor = "Green";
-                await LoadRequestsAsync();    
-            }
-            else
-            {                                                                                                      
-                StatusMessage = "Error";
-                MessageColor = "Red";   
-            }
-        }
-        catch (Exception e)
+        var response = await _apiService.ChangeStatus(new ChangeStatusModel()
         {
-            Console.WriteLine(e);
+            RequestId = SelectedRequest.Id,
+            NewStatusId = SelectedNewStatus.Id,
+            CurrentUserId =  _session.UserId
+        });
+        if (response.IsSuccessStatusCode)
+        {
+            StatusMessage = "Success";
+            MessageColor = "Green";
+            await LoadRequestsAsync();    
         }
-        
+        else
+        {                                                                                                      
+            StatusMessage = "Error";
+            MessageColor = "Red";   
+        }
     }
 
     [RelayCommand]

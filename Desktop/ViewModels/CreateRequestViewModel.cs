@@ -43,6 +43,13 @@ public partial class CreateRequestViewModel : ViewModelBase
     [RelayCommand]
     private async Task CreateRequest()
     {
+        if (string.IsNullOrWhiteSpace(Topic) || string.IsNullOrWhiteSpace(Description) ||
+            string.IsNullOrWhiteSpace(ContactInfo) || SelectedDirection == null || SelectedFormat == null)
+        {
+            ErrorMessage = "Заполните все поля";
+            ErrorMessageColor = "Red";
+            return;
+        }
         var response = await _apiService.CreateReqAsync(new CreateRequestModel
         {
             Topic = Topic,
@@ -60,7 +67,7 @@ public partial class CreateRequestViewModel : ViewModelBase
         }
         else
         {
-            ErrorMessage = await response.Content.ReadAsStringAsync();
+            ErrorMessage = "Ошибка";
             ErrorMessageColor = "Red";
         }
     }

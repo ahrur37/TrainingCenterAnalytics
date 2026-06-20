@@ -9,11 +9,9 @@
 
     <Grid RowDefinitions="Auto, *" Background="#F0F2F5">
 
-        <!-- Top bar -->
         <Border Grid.Row="0" Background="White" BoxShadow="0 1 4 0 #14000000" Padding="20,12">
             <Grid ColumnDefinitions="Auto, *, Auto">
 
-                <!-- Left: title -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
                     <Border Background="#5C6BC0" CornerRadius="8" Width="34" Height="34">
                         <TextBlock Text="🎓" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -22,7 +20,6 @@
                                Foreground="#212121" VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Center: filters -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             IsVisible="{Binding CanView}">
@@ -39,7 +36,6 @@
                     <Button Classes="ghost" Content="Сбросить" Command="{Binding ResetFiltersCommand}"/>
                 </StackPanel>
 
-                <!-- Right: actions -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                     <Button Classes="primary" Content="+ Новая заявка"
                             Command="{Binding GoToCreateRequestCommand}"/>
@@ -52,18 +48,17 @@
             </Grid>
         </Border>
 
-        <!-- Content -->
         <Grid Grid.Row="1" ColumnDefinitions="*, 16, 300">
 
-            <!-- Table -->
             <Border Grid.Column="0" Margin="16,16,0,16" Classes="card" Padding="0">
                 <DataGrid ItemsSource="{Binding Requests}"
                           SelectedItem="{Binding SelectedRequest, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
+                          CanUserResizeColumns="True"
                           CornerRadius="12">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="№"           Binding="{Binding Id}"                  Width="50"/>
+                        <DataGridTextColumn Header="№"           Binding="{Binding Id}"                  Width="60"/>
                         <DataGridTextColumn Header="Тема"        Binding="{Binding Topic}"                Width="200"/>
                         <DataGridTextColumn Header="Описание"    Binding="{Binding Description}"          Width="200"/>
                         <DataGridTextColumn Header="Направление" Binding="{Binding Direction.Name}"       Width="140"/>
@@ -75,11 +70,9 @@
                 </DataGrid>
             </Border>
 
-            <!-- Sidebar -->
             <ScrollViewer Grid.Column="2" Margin="0,16,16,16">
                 <StackPanel Spacing="12">
 
-                    <!-- Status change -->
                     <Border Classes="card" IsVisible="{Binding CanChangeStatus}">
                         <StackPanel Spacing="10">
                             <TextBlock Text="Изменить статус" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
@@ -95,7 +88,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Assign manager -->
                     <Border Classes="card" IsVisible="{Binding CanView}">
                         <StackPanel Spacing="10">
                             <TextBlock Text="Ответственный" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
@@ -111,7 +103,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Comments -->
                     <Border Classes="card" IsVisible="{Binding CanEdit}">
                         <StackPanel Spacing="10">
                             <TextBlock Text="Комментарии" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
