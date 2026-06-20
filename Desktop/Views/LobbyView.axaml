@@ -130,6 +130,15 @@
                         </StackPanel>
                     </Border>
 
+                    <Border Classes="card" IsVisible="{Binding CanEditRequest}">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Действия" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
+                            <Button Classes="ghost" Content="Редактировать"
+                                    Command="{Binding GoToEditRequestCommand}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
                 </StackPanel>
             </ScrollViewer>
 
