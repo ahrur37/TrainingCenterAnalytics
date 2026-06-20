@@ -51,6 +51,8 @@ public partial class LobbyViewModel : ViewModelBase
     [ObservableProperty]
     private string _shareStatusMessage = string.Empty;
     [ObservableProperty]
+    private ObservableCollection<StatusModel> _activeStatuses = [];
+    [ObservableProperty]
     private ObservableCollection<UserModel> _listManagers = [];
     [ObservableProperty]
     private UserModel? _selectedManager;
@@ -93,6 +95,7 @@ public partial class LobbyViewModel : ViewModelBase
         await Task.WhenAll(directions, statuses, users);
         Listdirections = new ObservableCollection<DirectionModel>(directions.Result);
         Liststatuses = new ObservableCollection<StatusModel>(statuses.Result);
+        ActiveStatuses = new ObservableCollection<StatusModel>(statuses.Result.Where(s => s.IsActive));
         ListManagers = new ObservableCollection<UserModel>(users.Result.Where(u => u.RoleId == (int)Roles.Manager));
     }
 

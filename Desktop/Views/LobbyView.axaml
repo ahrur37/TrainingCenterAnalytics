@@ -83,7 +83,7 @@
                     <Border Classes="card" IsVisible="{Binding CanChangeStatus}">
                         <StackPanel Spacing="10">
                             <TextBlock Text="Изменить статус" FontWeight="SemiBold" FontSize="14" Foreground="#212121"/>
-                            <ComboBox ItemsSource="{Binding Liststatuses}"
+                            <ComboBox ItemsSource="{Binding ActiveStatuses}"
                                       SelectedItem="{Binding SelectedNewStatus, Mode=TwoWay}"
                                       DisplayMemberBinding="{Binding Name}"
                                       HorizontalAlignment="Stretch"/>
