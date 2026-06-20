@@ -9,7 +9,6 @@
 
     <Grid RowDefinitions="Auto, *" Background="#F0F2F5">
 
-        <!-- Header -->
         <Border Grid.Row="0" Background="White" BoxShadow="0 1 4 0 #14000000" Padding="24,14">
             <StackPanel Orientation="Horizontal" Spacing="16">
                 <Button Classes="ghost" Content="← Назад" Command="{Binding GoBackCommand}" VerticalAlignment="Center"/>
@@ -18,7 +17,6 @@
             </StackPanel>
         </Border>
 
-        <!-- Form -->
         <ScrollViewer Grid.Row="1" Padding="24">
             <Border Classes="card" Width="480" HorizontalAlignment="Center">
                 <StackPanel Spacing="16">
