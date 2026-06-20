@@ -69,7 +69,6 @@
             <Setter Property="Background" Value="#EEF0FB"/>
         </Style>
 
-        <!-- Inputs -->
         <Style Selector="TextBox">
             <Setter Property="CornerRadius" Value="7"/>
             <Setter Property="Padding" Value="10,9"/>
