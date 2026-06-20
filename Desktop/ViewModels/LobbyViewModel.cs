@@ -172,6 +172,7 @@ public partial class LobbyViewModel : ViewModelBase
             _ = _signalR.JoinRequest(value.Id);
 
             SelectedNewStatus = Liststatuses?.FirstOrDefault(s => s.Id == value.StatusId);
+            SelectedManager = ListManagers.FirstOrDefault(s => s.Id == value.AssigneeId);
             _ = LoadCommentsAsync();
             UpdatePermissions(value);
             StatusMessage = string.Empty;
