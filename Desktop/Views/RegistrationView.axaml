@@ -7,8 +7,8 @@
              x:Class="TCA.Desktop.Views.RegistrationView"
              x:DataType="vm:RegistrationViewModel">
 
-    <Grid Background="#F0F2F5">
-        <Border Classes="card" Width="360" VerticalAlignment="Center" HorizontalAlignment="Center">
+    <ScrollViewer Background="#F0F2F5" VerticalScrollBarVisibility="Auto">
+        <Border Classes="card" Width="360" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,24">
             <StackPanel Spacing="20">
 
                 <StackPanel Spacing="6" HorizontalAlignment="Center">
@@ -27,17 +27,17 @@
                 <StackPanel Spacing="14">
                     <StackPanel Spacing="4">
                         <TextBlock Classes="label" Text="Имя"/>
-                        <TextBox Text="{Binding Name}" Watermark="Введите имя"/>
+                        <TextBox Text="{Binding Name}" PlaceholderText="Введите имя"/>
                     </StackPanel>
 
                     <StackPanel Spacing="4">
                         <TextBlock Classes="label" Text="Email"/>
-                        <TextBox Text="{Binding Email}" Watermark="Введите email"/>
+                        <TextBox Text="{Binding Email}" PlaceholderText="Введите email"/>
                     </StackPanel>
 
                     <StackPanel Spacing="4">
                         <TextBlock Classes="label" Text="Пароль"/>
-                        <TextBox Text="{Binding Password}" PasswordChar="•" Watermark="Введите пароль"/>
+                        <TextBox Text="{Binding Password}" PasswordChar="•" PlaceholderText="Введите пароль"/>
                     </StackPanel>
                 </StackPanel>
 
@@ -56,6 +56,6 @@
 
             </StackPanel>
         </Border>
-    </Grid>
+    </ScrollViewer>
 
 </UserControl>

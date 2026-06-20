@@ -61,6 +61,7 @@
                         <DataGridTextColumn Header="№"           Binding="{Binding Id}"                  Width="60"/>
                         <DataGridTextColumn Header="Тема"        Binding="{Binding Topic}"                Width="200"/>
                         <DataGridTextColumn Header="Описание"    Binding="{Binding Description}"          Width="200"/>
+                        <DataGridTextColumn Header="Контанты"    Binding="{Binding ContactInfo}"          Width="200"/>
                         <DataGridTextColumn Header="Направление" Binding="{Binding Direction.Name}"       Width="140"/>
                         <DataGridTextColumn Header="Формат"      Binding="{Binding TrainingFormat.Name}"  Width="120"/>
                         <DataGridTextColumn Header="Статус"      Binding="{Binding Status.Name}"          Width="110"/>
