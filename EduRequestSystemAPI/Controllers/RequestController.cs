@@ -99,13 +99,40 @@ namespace EduRequestSystemAPI.Controllers
         [HttpPost]
         [RoleAuthorized(2, 3, 4)]
         [Route("ChangeStatus")]
-        public async Task<IActionResult> ChangeStatus(int requestId, int newStatusId, int currentUserId)
+        public async Task<IActionResult> ChangeStatus(int requestId, int newStatusId)
         {
             var token = Request.Headers["Authorization"].FirstOrDefault();
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var currentUserId = int.Parse(jwt.Claims.First(c => c.Type == "userId").Value);
             var roleId = int.Parse(jwt.Claims.First(c => c.Type == "roleId").Value);
 
             return await _requestService.ChangeStatusAsync(requestId, newStatusId, currentUserId, roleId);
+        }
+
+        [HttpPut]
+        [RoleAuthorized(1, 2, 3, 4)]
+        [Route("UpdateRequest/{requestId}")]
+        public async Task<IActionResult> UpdateRequest(int requestId, [FromBody] UpdateRequest model)
+        {
+            var token = Request.Headers["Authorization"].FirstOrDefault();
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var currentUserId = int.Parse(jwt.Claims.First(c => c.Type == "userId").Value);
+            var roleId = int.Parse(jwt.Claims.First(c => c.Type == "roleId").Value);
+
+            return await _requestService.UpdateRequestAsync(requestId, currentUserId, roleId, model);
+        }
+
+        [HttpDelete]
+        [RoleAuthorized(1, 2, 3, 4)]
+        [Route("DeleteRequest/{requestId}")]
+        public async Task<IActionResult> DeleteRequest(int requestId)
+        {
+            var token = Request.Headers["Authorization"].FirstOrDefault();
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var currentUserId = int.Parse(jwt.Claims.First(c => c.Type == "userId").Value);
+            var roleId = int.Parse(jwt.Claims.First(c => c.Type == "roleId").Value);
+
+            return await _requestService.DeleteRequestAsync(requestId, currentUserId, roleId);
         }
     }
 }

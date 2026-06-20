@@ -40,6 +40,8 @@ public partial class LobbyViewModel : ViewModelBase
     private bool _canEdit = false;
     [ObservableProperty]
     private bool _canChangeStatus = false;
+    [ObservableProperty]
+    private bool _canEditRequest = false;
     [ObservableProperty]                                                                                                                                                          
     private string _statusMessage = string.Empty;                                                                                                                                 
     [ObservableProperty]                                                                                                                                                          
@@ -154,6 +156,10 @@ public partial class LobbyViewModel : ViewModelBase
                   || (role == Roles.User && value.AuthorId == _session.UserId);
         CanChangeStatus = role == Roles.Admin || role == Roles.Director
                   || (role == Roles.Manager && value.AssigneeId == _session.UserId);
+        CanEditRequest = value.StatusId == 1 && (
+                  role == Roles.Admin || role == Roles.Director
+                  || (role == Roles.Manager && value.AssigneeId == _session.UserId)
+                  || (role == Roles.User && value.AuthorId == _session.UserId));
     }
 
     partial void OnSelectedRequestChanged(RequestModel? value)
@@ -178,6 +184,7 @@ public partial class LobbyViewModel : ViewModelBase
             _currentRequestId = null;
             CanEdit = false;
             CanChangeStatus = false;
+            CanEditRequest = false;
         }
     }
 
@@ -209,7 +216,6 @@ public partial class LobbyViewModel : ViewModelBase
         {
             RequestId = SelectedRequest.Id,
             NewStatusId = SelectedNewStatus.Id,
-            CurrentUserId =  _session.UserId
         });
         if (response.IsSuccessStatusCode)
         {
@@ -299,5 +305,14 @@ public partial class LobbyViewModel : ViewModelBase
     private void GoToDictionaries()
     {
         _navigator.NavigateTo(App.Services.GetRequiredService<DictionariesViewModel>());
+    }
+
+    [RelayCommand]
+    private void GoToEditRequest()
+    {
+        if (SelectedRequest == null) return;
+        var vm = App.Services.GetRequiredService<EditRequestViewModel>();
+        vm.LoadRequest(SelectedRequest);
+        _navigator.NavigateTo(vm);
     }
 }
