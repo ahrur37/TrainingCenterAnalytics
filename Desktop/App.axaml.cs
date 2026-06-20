@@ -32,6 +32,7 @@ public partial class App : Application
         collection.AddTransient<RegistrationViewModel>();
         collection.AddTransient<LobbyViewModel>();
         collection.AddTransient<CreateRequestViewModel>();
+        collection.AddTransient<EditRequestViewModel>();
         collection.AddTransient<DictionariesViewModel>();
 
         Services = collection.BuildServiceProvider();

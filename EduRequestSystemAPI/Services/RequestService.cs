@@ -207,6 +207,96 @@ namespace EduRequestSystemAPI.Services
             }
         }
 
+        public async Task<IActionResult> UpdateRequestAsync(int requestId, int currentUserId, int roleId, UpdateRequest model)
+        {
+            try
+            {
+                var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+                if (request == null)
+                    return new NotFoundObjectResult("Заявка не найдена.");
+
+                if (roleId == 1)
+                {
+                    if (request.AuthorId != currentUserId)
+                        return new BadRequestObjectResult("Вы можете редактировать только свои заявки.");
+                    if (request.StatusId != 1)
+                        return new BadRequestObjectResult("Редактировать можно только заявки со статусом 'Новая'.");
+                }
+                else if (roleId == 2)
+                {
+                    if (request.AssigneeId != currentUserId)
+                        return new BadRequestObjectResult("Вы можете редактировать только назначенные вам заявки.");
+                }
+
+                request.Topic = model.Topic;
+                request.Description = model.Description;
+                request.ContactInfo = model.ContactInfo;
+                request.DirectionId = model.DirectionId;
+                request.TrainingFormatId = model.TrainingFormatId;
+                request.UpdatedAt = DateTime.UtcNow;
+
+                var auditLog = new AuditLog
+                {
+                    Action = AuditAction.UpdateRequest,
+                    EntityName = AuditEntity.Request,
+                    EntityId = requestId,
+                    UserId = currentUserId,
+                    Timestamp = DateTime.UtcNow,
+                    Details = $"Пользователь ID {currentUserId} отредактировал заявку ID {requestId}"
+                };
+                _context.AuditLogs.Add(auditLog);
+
+                await _context.SaveChangesAsync();
+                return new OkObjectResult("Заявка успешно обновлена.");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при обновлении заявки: {ex.Message}");
+            }
+        }
+
+        public async Task<IActionResult> DeleteRequestAsync(int requestId, int currentUserId, int roleId)
+        {
+            try
+            {
+                var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+                if (request == null)
+                    return new NotFoundObjectResult("Заявка не найдена.");
+
+                if (roleId == 1)
+                {
+                    if (request.AuthorId != currentUserId)
+                        return new BadRequestObjectResult("Вы можете удалять только свои заявки.");
+                    if (request.StatusId != 1)
+                        return new BadRequestObjectResult("Удалить можно только заявку со статусом 'Новая'.");
+                }
+                else if (roleId == 2)
+                {
+                    if (request.AssigneeId != currentUserId)
+                        return new BadRequestObjectResult("Вы можете удалять только назначенные вам заявки.");
+                }
+
+                var auditLog = new AuditLog
+                {
+                    Action = AuditAction.UpdateRequest,
+                    EntityName = AuditEntity.Request,
+                    EntityId = requestId,
+                    UserId = currentUserId,
+                    Timestamp = DateTime.UtcNow,
+                    Details = $"Пользователь ID {currentUserId} удалил заявку ID {requestId}"
+                };
+                _context.AuditLogs.Add(auditLog);
+
+                _context.Requests.Remove(request);
+                await _context.SaveChangesAsync();
+                return new OkObjectResult("Заявка успешно удалена.");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Ошибка при удалении заявки: {ex.Message}");
+            }
+        }
+
         public async Task<IActionResult> GetRequestByIdAsync(int requestId)
         {
             try
