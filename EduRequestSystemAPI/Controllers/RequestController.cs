@@ -109,6 +109,16 @@ namespace EduRequestSystemAPI.Controllers
             return await _requestService.ChangeStatusAsync(requestId, newStatusId, currentUserId, roleId);
         }
 
+        /// <summary>
+        /// Редактирование заявки.
+        /// </summary>
+        /// <remarks>
+        /// Заявитель (1) — только свои заявки со статусом "Новая".
+        /// Менеджер (2) — только назначенные ему заявки, без ограничения по статусу.
+        /// Администратор (3) и Директор (4) — любые заявки.
+        /// </remarks>
+        /// <param name="requestId">ID редактируемой заявки</param>
+        /// <param name="model">Новые данные заявки</param>
         [HttpPut]
         [RoleAuthorized(1, 2, 3, 4)]
         [Route("UpdateRequest/{requestId}")]
@@ -122,6 +132,15 @@ namespace EduRequestSystemAPI.Controllers
             return await _requestService.UpdateRequestAsync(requestId, currentUserId, roleId, model);
         }
 
+        /// <summary>
+        /// Удаление заявки.
+        /// </summary>
+        /// <remarks>
+        /// Заявитель (1) — только свои заявки со статусом "Новая".
+        /// Менеджер (2) — только назначенные ему заявки.
+        /// Администратор (3) и Директор (4) — любые заявки.
+        /// </remarks>
+        /// <param name="requestId">ID удаляемой заявки</param>
         [HttpDelete]
         [RoleAuthorized(1, 2, 3, 4)]
         [Route("DeleteRequest/{requestId}")]
