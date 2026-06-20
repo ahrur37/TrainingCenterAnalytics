@@ -156,10 +156,9 @@ public partial class LobbyViewModel : ViewModelBase
                   || (role == Roles.User && value.AuthorId == _session.UserId);
         CanChangeStatus = role == Roles.Admin || role == Roles.Director
                   || (role == Roles.Manager && value.AssigneeId == _session.UserId);
-        CanEditRequest = value.StatusId == 1 && (
-                  role == Roles.Admin || role == Roles.Director
-                  || (role == Roles.Manager && value.AssigneeId == _session.UserId)
-                  || (role == Roles.User && value.AuthorId == _session.UserId));
+        CanEditRequest = role == Roles.Admin || role == Roles.Director 
+                                             || (role == Roles.Manager && value.AssigneeId == _session.UserId)
+                                             || (value.StatusId == 1 && role == Roles.User && value.AuthorId == _session.UserId);
     }
 
     partial void OnSelectedRequestChanged(RequestModel? value)

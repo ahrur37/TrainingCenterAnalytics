@@ -9,7 +9,6 @@
 
     <Grid RowDefinitions="Auto, *" Background="#F0F2F5">
 
-        <!-- Header -->
         <Border Grid.Row="0" Background="White" BoxShadow="0 1 4 0 #14000000" Padding="24,14">
             <Grid ColumnDefinitions="Auto, *, Auto">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
@@ -24,13 +23,12 @@
             </Grid>
         </Border>
 
-        <!-- Form -->
         <ScrollViewer Grid.Row="1" Padding="24">
             <Border Classes="card" Width="480" HorizontalAlignment="Center">
                 <StackPanel Spacing="16">
 
                     <StackPanel Spacing="4">
-                        <TextBlock Classes="label" Text="Тема *"/>
+                        <TextBlock Classes="label" Text="Тема"/>
                         <TextBox Text="{Binding Topic, Mode=TwoWay}" PlaceholderText="Введите тему заявки"/>
                     </StackPanel>
 
@@ -49,7 +47,7 @@
                     </StackPanel>
 
                     <StackPanel Spacing="4">
-                        <TextBlock Classes="label" Text="Направление *"/>
+                        <TextBlock Classes="label" Text="Направление"/>
                         <ComboBox ItemsSource="{Binding Directions}"
                                   SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
                                   DisplayMemberBinding="{Binding Name}"
@@ -57,7 +55,7 @@
                     </StackPanel>
 
                     <StackPanel Spacing="4">
-                        <TextBlock Classes="label" Text="Формат обучения *"/>
+                        <TextBlock Classes="label" Text="Формат обучения"/>
                         <ComboBox ItemsSource="{Binding Formats}"
                                   SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"
                                   DisplayMemberBinding="{Binding Name}"

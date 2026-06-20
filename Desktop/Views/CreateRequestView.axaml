@@ -17,12 +17,12 @@
             </StackPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="1" Padding="24">
-            <Border Classes="card" Width="480" HorizontalAlignment="Center">
+        <ScrollViewer Grid.Row="1" Padding="24" VerticalScrollBarVisibility="Auto">
+            <Border Classes="card" Width="480" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <StackPanel Spacing="16">
 
                     <StackPanel Spacing="4">
-                        <TextBlock Classes="label" Text="Тема *"/>
+                        <TextBlock Classes="label" Text="Тема"/>
                         <TextBox Text="{Binding Topic, Mode=TwoWay}" Watermark="Введите тему заявки"/>
                     </StackPanel>
 
@@ -41,7 +41,7 @@
                     </StackPanel>
 
                     <StackPanel Spacing="4">
-                        <TextBlock Classes="label" Text="Направление *"/>
+                        <TextBlock Classes="label" Text="Направление"/>
                         <ComboBox ItemsSource="{Binding Directions}"
                                   SelectedItem="{Binding SelectedDirection, Mode=TwoWay}"
                                   DisplayMemberBinding="{Binding Name}"
@@ -49,7 +49,7 @@
                     </StackPanel>
 
                     <StackPanel Spacing="4">
-                        <TextBlock Classes="label" Text="Формат обучения *"/>
+                        <TextBlock Classes="label" Text="Формат обучения"/>
                         <ComboBox ItemsSource="{Binding Formats}"
                                   SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"
                                   DisplayMemberBinding="{Binding Name}"
