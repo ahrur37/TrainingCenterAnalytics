@@ -62,7 +62,7 @@ public partial class CreateRequestViewModel : ViewModelBase
 
         if (response.IsSuccessStatusCode)
         {
-            ErrorMessage = "Заявка успешно создана";
+            ErrorMessage = "Успешно";
             ErrorMessageColor = "Green";
         }
         else
