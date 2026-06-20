@@ -35,8 +35,8 @@ public partial class CreateRequestViewModel : ViewModelBase
         var directions = _apiService.GetDirections();
         var formats = _apiService.GetTrainingFormats();
         await Task.WhenAll(directions, formats);
-        Directions = new ObservableCollection<DirectionModel>(directions.Result);
-        Formats = new ObservableCollection<TrainingFormatModel>(formats.Result);
+        Directions = new ObservableCollection<DirectionModel>(directions.Result.Where(d => d.IsActive));
+        Formats = new ObservableCollection<TrainingFormatModel>(formats.Result.Where(f => f.IsActive));
     }
 
     [RelayCommand]

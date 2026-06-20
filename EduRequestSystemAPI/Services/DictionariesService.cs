@@ -75,7 +75,7 @@ namespace EduRequestSystemAPI.Services
             {
                 var direction = await _context.Directions.FindAsync(id);
 
-                _context.Directions.Remove(direction);
+                direction.IsActive = false;
                 await _context.SaveChangesAsync();
 
                 return new OkObjectResult($"Направление '{direction.Name}' успешно удалено.");
@@ -144,10 +144,10 @@ namespace EduRequestSystemAPI.Services
             {
                 var status = await _context.Statuses.FindAsync(id);
 
-                _context.Statuses.Remove(status);
+                status.IsActive = false;
                 await _context.SaveChangesAsync();
 
-                return new OkObjectResult($"Статус '{status.Name}' успешно удалено.");
+                return new OkObjectResult($"Статус '{status.Name}' успешно удален.");
             }
             catch (Exception ex)
             {
@@ -213,7 +213,7 @@ namespace EduRequestSystemAPI.Services
             {
                 var format = await _context.TrainingFormats.FindAsync(id);
 
-                _context.TrainingFormats.Remove(format);
+                format.IsActive = false;
                 await _context.SaveChangesAsync();
 
                 return new OkObjectResult($"Формат '{format.Name}' успешно удален.");
