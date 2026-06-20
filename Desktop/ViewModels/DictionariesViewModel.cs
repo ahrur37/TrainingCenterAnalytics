@@ -14,21 +14,18 @@ public partial class DictionariesViewModel : ViewModelBase
     private readonly ApiService _apiService;
     private readonly INavigator _navigator;
 
-    // Directions
     [ObservableProperty] private ObservableCollection<DirectionModel> _directions = [];
     [ObservableProperty] private DirectionModel? _selectedDirection;
     [ObservableProperty] private string _directionName = string.Empty;
     [ObservableProperty] private string _directionMessage = string.Empty;
     [ObservableProperty] private string _directionMessageColor = "Green";
 
-    // Statuses
     [ObservableProperty] private ObservableCollection<StatusModel> _statuses = [];
     [ObservableProperty] private StatusModel? _selectedStatus;
     [ObservableProperty] private string _statusName = string.Empty;
     [ObservableProperty] private string _statusMessage = string.Empty;
     [ObservableProperty] private string _statusMessageColor = "Green";
 
-    // Training Formats
     [ObservableProperty] private ObservableCollection<TrainingFormatModel> _trainingFormats = [];
     [ObservableProperty] private TrainingFormatModel? _selectedTrainingFormat;
     [ObservableProperty] private string _trainingFormatName = string.Empty;
