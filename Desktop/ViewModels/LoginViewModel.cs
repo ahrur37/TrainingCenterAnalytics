@@ -36,7 +36,7 @@ public partial class LoginViewModel : ViewModelBase
         }
         else
         {
-            ErrorMessage = "Incorrect login or password";
+            ErrorMessage = "Неверный логин или пароль";
         }
     }
 
