@@ -38,6 +38,13 @@ public partial class RegistrationViewModel : ViewModelBase
             MessageColor = "Red";
             return;
         }
+
+        if (Password.Length < 6)
+        {
+            Message = "Пароль должен быть больше 6 символов";
+            MessageColor = "Red";
+            return;
+        }
         var response = await _apiservice.RegUserASync(new RegUserModel {Name = Name, Email = Email, Password = Password});
         if (response.IsSuccessStatusCode)
         {
