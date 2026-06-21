@@ -1,14 +1,16 @@
 name: CI/CD
-on: 
+on:
   push:
     branches: [ master ]
+    tags:
+      - 'v*'
 jobs:
-  build: 
-    runs-on: ubuntu-latest          # было "ubunti-latest"
+  build:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3   # пропущена строка uses
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
       - name: Restore dependencies
@@ -17,16 +19,43 @@ jobs:
         run: dotnet build EduRequestSystemAPI/EduRequestSystemAPI.csproj --no-restore
   deploy:
     needs: build
-    runs-on: ubuntu-latest           # было "ubuntu/latest"
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
-      - name: Deploy to server  
+      - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |                  # нужен | для многострочного значения
+          script: |
             cd ~/TrainingCenterAnalytics
             git pull origin master
             docker compose up --build -d
+  release-desktop:
+    runs-on: macos-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build Cloud version
+        run: |
+          cp Desktop/appsettings.cloud.json Desktop/appsettings.json
+          dotnet publish Desktop/Desktop.csproj -c Release -r osx-x64 --self-contained -o ./out/cloud
+      - name: Build Self-hosted version
+        run: |
+          cp Desktop/appsettings.selfhosted.json Desktop/appsettings.json
+          dotnet publish Desktop/Desktop.csproj -c Release -r osx-x64 --self-contained -o ./out/selfhosted
+      - name: Rename binaries
+        run: |
+          mv ./out/cloud/Desktop ./out/cloud/cloud
+          mv ./out/selfhosted/Desktop ./out/selfhosted/selfhosted
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./out/cloud/cloud
+            ./out/selfhosted/selfhosted
