@@ -25,7 +25,7 @@ namespace EduRequestSystemAPI.Controllers
         /// </remarks>
         /// <param name="createRequestModel">Модель с данными для создания заявки</param>
         [HttpPost]
-        [RoleAuthorized(1)]
+        [RoleAuthorized(1, 2, 3, 4)]
         [Route("CreateRequest")]
         public async Task<IActionResult> CreateRequest([FromBody] CreateRequest createRequestModel)
         {

@@ -34,7 +34,7 @@ namespace EduRequestSystemAPI.CustomAttributes
 
             if (!_roleId.Contains(userSession.User.RoleId))
             {
-                context.Result = new JsonResult(new { error = "No prava" }) { StatusCode = 401 };
+                context.Result = new JsonResult(new { error = "no rights" }) { StatusCode = 401 };
                 return;
             }
 
