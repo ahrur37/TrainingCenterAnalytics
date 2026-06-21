@@ -35,6 +35,8 @@ jobs:
   release-desktop:
     runs-on: macos-latest
     if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
