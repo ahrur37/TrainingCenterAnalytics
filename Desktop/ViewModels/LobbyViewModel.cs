@@ -63,7 +63,6 @@ public partial class LobbyViewModel : ViewModelBase
     [ObservableProperty]
     private string _assignMessageColor = "Green";
     
-
     private bool _isResetting;
     private int? _currentRequestId;
     private readonly ApiService _apiService;
@@ -85,7 +84,7 @@ public partial class LobbyViewModel : ViewModelBase
 
     public override async Task OnNavigatedTo()
     {
-        await _signalR.StartAsync("http://161.104.32.25");
+        await _signalR.StartAsync(_apiService.BaseUrl);
         await Task.WhenAll(LoadRequestsAsync(), LoadComboboxesAsync());
     }
 
