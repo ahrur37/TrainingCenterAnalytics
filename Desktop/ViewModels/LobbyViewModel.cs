@@ -40,6 +40,8 @@ public partial class LobbyViewModel : ViewModelBase
     private bool _canEdit = false;
     [ObservableProperty]
     private bool _canChangeStatus = false;
+    [ObservableProperty]
+    private bool _canEditRequest = false;
     [ObservableProperty]                                                                                                                                                          
     private string _statusMessage = string.Empty;                                                                                                                                 
     [ObservableProperty]                                                                                                                                                          
@@ -51,6 +53,8 @@ public partial class LobbyViewModel : ViewModelBase
     [ObservableProperty]
     private string _shareStatusMessage = string.Empty;
     [ObservableProperty]
+    private ObservableCollection<StatusModel> _activeStatuses = [];
+    [ObservableProperty]
     private ObservableCollection<UserModel> _listManagers = [];
     [ObservableProperty]
     private UserModel? _selectedManager;
@@ -59,7 +63,6 @@ public partial class LobbyViewModel : ViewModelBase
     [ObservableProperty]
     private string _assignMessageColor = "Green";
     
-
     private bool _isResetting;
     private int? _currentRequestId;
     private readonly ApiService _apiService;
@@ -81,7 +84,7 @@ public partial class LobbyViewModel : ViewModelBase
 
     public override async Task OnNavigatedTo()
     {
-        await _signalR.StartAsync("http://161.104.32.25");
+        await _signalR.StartAsync(_apiService.BaseUrl);
         await Task.WhenAll(LoadRequestsAsync(), LoadComboboxesAsync());
     }
 
@@ -93,6 +96,7 @@ public partial class LobbyViewModel : ViewModelBase
         await Task.WhenAll(directions, statuses, users);
         Listdirections = new ObservableCollection<DirectionModel>(directions.Result);
         Liststatuses = new ObservableCollection<StatusModel>(statuses.Result);
+        ActiveStatuses = new ObservableCollection<StatusModel>(statuses.Result.Where(s => s.IsActive));
         ListManagers = new ObservableCollection<UserModel>(users.Result.Where(u => u.RoleId == (int)Roles.Manager));
     }
 
@@ -151,6 +155,9 @@ public partial class LobbyViewModel : ViewModelBase
                   || (role == Roles.User && value.AuthorId == _session.UserId);
         CanChangeStatus = role == Roles.Admin || role == Roles.Director
                   || (role == Roles.Manager && value.AssigneeId == _session.UserId);
+        CanEditRequest = role == Roles.Admin || role == Roles.Director 
+                                             || (role == Roles.Manager && value.AssigneeId == _session.UserId)
+                                             || (value.StatusId == 1 && role == Roles.User && value.AuthorId == _session.UserId);
     }
 
     partial void OnSelectedRequestChanged(RequestModel? value)
@@ -164,6 +171,7 @@ public partial class LobbyViewModel : ViewModelBase
             _ = _signalR.JoinRequest(value.Id);
 
             SelectedNewStatus = Liststatuses?.FirstOrDefault(s => s.Id == value.StatusId);
+            SelectedManager = ListManagers.FirstOrDefault(s => s.Id == value.AssigneeId);
             _ = LoadCommentsAsync();
             UpdatePermissions(value);
             StatusMessage = string.Empty;
@@ -175,6 +183,7 @@ public partial class LobbyViewModel : ViewModelBase
             _currentRequestId = null;
             CanEdit = false;
             CanChangeStatus = false;
+            CanEditRequest = false;
         }
     }
 
@@ -200,33 +209,24 @@ public partial class LobbyViewModel : ViewModelBase
     [RelayCommand]
     private async Task ChangeStatus()
     {
-        try
-        {
-            if (SelectedRequest == null || SelectedNewStatus == null) return; 
+        if (SelectedRequest == null || SelectedNewStatus == null) return; 
         
-            var response = await _apiService.ChangeStatus(new ChangeStatusModel()
-            {
-                RequestId = SelectedRequest.Id,
-                NewStatusId = SelectedNewStatus.Id,
-                CurrentUserId =  _session.UserId
-            });
-            if (response.IsSuccessStatusCode)
-            {
-                StatusMessage = "Success";
-                MessageColor = "Green";
-                await LoadRequestsAsync();    
-            }
-            else
-            {                                                                                                      
-                StatusMessage = "Error";
-                MessageColor = "Red";   
-            }
-        }
-        catch (Exception e)
+        var response = await _apiService.ChangeStatus(new ChangeStatusModel()
         {
-            Console.WriteLine(e);
+            RequestId = SelectedRequest.Id,
+            NewStatusId = SelectedNewStatus.Id,
+        });
+        if (response.IsSuccessStatusCode)
+        {
+            StatusMessage = "Success";
+            MessageColor = "Green";
+            await LoadRequestsAsync();    
         }
-        
+        else
+        {                                                                                                      
+            StatusMessage = "Error";
+            MessageColor = "Red";   
+        }
     }
 
     [RelayCommand]
@@ -304,5 +304,14 @@ public partial class LobbyViewModel : ViewModelBase
     private void GoToDictionaries()
     {
         _navigator.NavigateTo(App.Services.GetRequiredService<DictionariesViewModel>());
+    }
+
+    [RelayCommand]
+    private void GoToEditRequest()
+    {
+        if (SelectedRequest == null) return;
+        var vm = App.Services.GetRequiredService<EditRequestViewModel>();
+        vm.LoadRequest(SelectedRequest);
+        _navigator.NavigateTo(vm);
     }
 }

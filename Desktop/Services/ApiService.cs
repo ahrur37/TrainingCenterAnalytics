@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -15,11 +15,18 @@ public class ApiService
     private readonly HttpClient _httpClient;
     private readonly SessionService _session;
     private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
-
+    public string BaseUrl { get; } 
     public ApiService(SessionService session)
     {
         _session = session;
-        _httpClient = new HttpClient { BaseAddress = new Uri("http://161.104.32.25") };
+        var config = new ConfigurationBuilder()                                                                                           
+            .SetBasePath(AppContext.BaseDirectory)                                                         
+            .AddJsonFile("appsettings.json", optional: true)                                                                              
+            .Build();    
+
+        BaseUrl = config["ApiUrl"] ?? "http://161.104.32.25";
+
+        _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
     }
     public async Task<HttpResponseMessage> AuthUserAsync(AuthUserModel model)                                                                                        
     {                                                                                                                                                                
@@ -87,10 +94,16 @@ public class ApiService
 
     public async Task<HttpResponseMessage> ChangeStatus(ChangeStatusModel model)
     {
-        var url = $"ChangeStatus?requestId={model.RequestId}&newStatusId={model.NewStatusId}&currentUserId={model.CurrentUserId}";                                                                                      
+        var url = $"ChangeStatus?requestId={model.RequestId}&newStatusId={model.NewStatusId}";                                                                                      
         var response = await _httpClient.PostAsync(url, null);      
         return response;
     }
+
+    public async Task<HttpResponseMessage> UpdateRequest(int requestId, UpdateRequestModel model) =>
+        await _httpClient.PutAsJsonAsync($"UpdateRequest/{requestId}", model);
+
+    public async Task<HttpResponseMessage> DeleteRequest(int requestId) =>
+        await _httpClient.DeleteAsync($"DeleteRequest/{requestId}");
 
     public async Task<HttpResponseMessage> AddComment(CreateCommentModel model)
     {

@@ -22,4 +22,4 @@ artifacts/
 .DS_Store
 Thumbs.db
 docker-compose.yml
-docker-compose.local.yml
+.env

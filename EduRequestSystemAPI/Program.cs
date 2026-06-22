@@ -5,6 +5,7 @@ using EduRequestSystemAPI.Services;
 using EduRequestSystemAPI.UniversalMethods;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,19 @@ builder.Services.AddSingleton<jwtGenerator>();
 builder.Services.AddSignalR();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ContextDb>();
+    db.Database.Migrate();
+
+    var seedPath = Path.Combine(AppContext.BaseDirectory, "seed.sql");
+    if (File.Exists(seedPath) && !db.Roles.Any())
+    {
+        var sql = File.ReadAllText(seedPath);
+        db.Database.ExecuteSqlRaw(sql);
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
