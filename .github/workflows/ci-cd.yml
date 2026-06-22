@@ -46,12 +46,12 @@ jobs:
       - name: Build Cloud version
         run: |
           cp Desktop/appsettings.cloud.json Desktop/appsettings.json
-          dotnet publish Desktop/Desktop.csproj -c Release -r osx-arm64 --self-contained --no-incremental -o ./out/cloud
+          dotnet publish Desktop/Desktop.csproj -c Release -r osx-arm64 --self-contained -o ./out/cloud
           cp Desktop/appsettings.cloud.json ./out/cloud/appsettings.json
       - name: Build Self-hosted version
         run: |
           cp Desktop/appsettings.selfhosted.json Desktop/appsettings.json
-          dotnet publish Desktop/Desktop.csproj -c Release -r osx-arm64 --self-contained --no-incremental -o ./out/selfhosted
+          dotnet publish Desktop/Desktop.csproj -c Release -r osx-arm64 --self-contained -o ./out/selfhosted
           cp Desktop/appsettings.selfhosted.json ./out/selfhosted/appsettings.json
       - name: Rename binaries and archive
         run: |
