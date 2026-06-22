@@ -9,7 +9,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data_local:/var/lib/postgresql/data
-    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   api:
     build:
       context: .
@@ -17,7 +22,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__TestDbString=Host=db;Port=5432;Database=EduRequestSystem;Username=postgres;Password=${POSTGRES_PASSWORD}
