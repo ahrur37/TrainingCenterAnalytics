@@ -14,6 +14,7 @@ docker compose -f docker-compose.local.yml up --build -d
 cp .env.example .env
 ```
 Заполнить значения в .env.
+
 3. Локально развернуть API и БД
 ```bash
 docker compose -f docker-compose.local.yml up --build -d
