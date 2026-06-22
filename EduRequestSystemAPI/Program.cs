@@ -5,6 +5,7 @@ using EduRequestSystemAPI.Services;
 using EduRequestSystemAPI.UniversalMethods;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +40,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 
     var seedPath = Path.Combine(AppContext.BaseDirectory, "seed.sql");
-    if (File.Exists(seedPath))
+    if (File.Exists(seedPath) && !db.Roles.Any())
     {
         var sql = File.ReadAllText(seedPath);
         db.Database.ExecuteSqlRaw(sql);
