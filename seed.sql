@@ -43,9 +43,9 @@ ON CONFLICT DO NOTHING;
 
 -- Requests
 INSERT INTO "Requests" ("Topic", "Description", "CreatedAt", "UpdatedAt", "ContactInfo", "DirectionId", "TrainingFormatId", "AuthorId", "StatusId") VALUES
-    ('Курс по Python',           'Хочу научиться программировать на Python с нуля', NOW(), NOW(), 'python@test.com',  1, 1, 3, 1),
-    ('Основы UX/UI',             'Нужен курс по проектированию интерфейсов',        NOW(), NOW(), 'ux@test.com',      2, 2, 3, 1),
-    ('Agile и Scrum',            'Обучение методологиям гибкой разработки',         NOW(), NOW(), 'agile@test.com',   3, 3, 3, 2),
-    ('SQL для аналитиков',       'Курс по работе с базами данных',                  NOW(), NOW(), 'sql@test.com',     4, 1, 3, 1),
-    ('Основы кибербезопасности', 'Введение в информационную безопасность',          NOW(), NOW(), 'sec@test.com',     5, 4, 3, 2)
+    ('Курс по Python',           'Хочу научиться программировать на Python с нуля', NOW(), NOW(), 'python@test.com',  1, 1, 1, 1),
+    ('Основы UX/UI',             'Нужен курс по проектированию интерфейсов',        NOW(), NOW(), 'ux@test.com',      2, 2, 1, 1),
+    ('Agile и Scrum',            'Обучение методологиям гибкой разработки',         NOW(), NOW(), 'agile@test.com',   3, 3, 1, 2),
+    ('SQL для аналитиков',       'Курс по работе с базами данных',                  NOW(), NOW(), 'sql@test.com',     4, 1, 1, 1),
+    ('Основы кибербезопасности', 'Введение в информационную безопасность',          NOW(), NOW(), 'sec@test.com',     5, 4, 1, 2)
 ON CONFLICT DO NOTHING;
