@@ -116,19 +116,19 @@ public class RequestServiceTests
         ctx.Requests.AddRange(
             new Request
             {
-                Topic = "Курс по Python", Description = "Основы языка",
+                Topic = "Курс по Python", Description = "Основы языка", ContactInfo = "py@test.com",
                 StatusId = 1, DirectionId = 1, TrainingFormatId = 1, AuthorId = 10,
                 CreatedAt = DateTime.UtcNow
             },
             new Request
             {
-                Topic = "Курс по C#", Description = "ООП и паттерны",
+                Topic = "Курс по C#", Description = "ООП и паттерны", ContactInfo = "csharp@test.com",
                 StatusId = 2, DirectionId = 1, TrainingFormatId = 1, AuthorId = 10,
                 CreatedAt = DateTime.UtcNow
             },
             new Request
             {
-                Topic = "Дизайн интерфейсов", Description = "Работа в Figma",
+                Topic = "Дизайн интерфейсов", Description = "Работа в Figma", ContactInfo = "design@test.com",
                 StatusId = 1, DirectionId = 2, TrainingFormatId = 2, AuthorId = 11,
                 CreatedAt = DateTime.UtcNow
             });
