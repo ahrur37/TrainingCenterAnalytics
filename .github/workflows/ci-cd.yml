@@ -51,13 +51,15 @@ jobs:
         run: |
           cp Desktop/appsettings.selfhosted.json Desktop/appsettings.json
           dotnet publish Desktop/Desktop.csproj -c Release -r osx-arm64 --self-contained -o ./out/selfhosted
-      - name: Rename binaries
+      - name: Rename binaries and archive
         run: |
           mv ./out/cloud/Desktop ./out/cloud/cloud
           mv ./out/selfhosted/Desktop ./out/selfhosted/selfhosted
+          cd ./out/cloud && zip -r ../../cloud.zip . && cd ../..
+          cd ./out/selfhosted && zip -r ../../selfhosted.zip . && cd ../..
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./out/cloud/cloud
-            ./out/selfhosted/selfhosted
+            ./cloud.zip
+            ./selfhosted.zip
