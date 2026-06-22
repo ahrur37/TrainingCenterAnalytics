@@ -1,32 +1,51 @@
 name: CI/CD
-on: 
+
+# CI: сборка проекта и автоматический прогон xUnit-тестов.
+# Запускается при push в master и для всех pull request, нацеленных в master.
+on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 jobs:
-  build: 
-    runs-on: ubuntu-latest          # было "ubunti-latest"
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3   # пропущена строка uses
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          # net8 — API и тесты; net10 — на случай, если в репозиторий попадёт global.json (SDK 10).
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      # Сборка тестового проекта по зависимости собирает и сам API.
       - name: Restore dependencies
-        run: dotnet restore EduRequestSystemAPI/EduRequestSystemAPI.csproj
+        run: dotnet restore EduRequestSystemAPI.Tests/EduRequestSystemAPI.Tests.csproj
+
       - name: Build
-        run: dotnet build EduRequestSystemAPI/EduRequestSystemAPI.csproj --no-restore
+        run: dotnet build EduRequestSystemAPI.Tests/EduRequestSystemAPI.Tests.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test EduRequestSystemAPI.Tests/EduRequestSystemAPI.Tests.csproj --configuration Release --no-build --verbosity normal
+
   deploy:
-    needs: build
-    runs-on: ubuntu-latest           # было "ubuntu/latest"
+    needs: build-test                  # деплой только после успешной сборки и тестов
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
-      - name: Deploy to server  
+      - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |                  # нужен | для многострочного значения
+          script: |
             cd ~/TrainingCenterAnalytics
             git pull origin master
             docker compose up --build -d
