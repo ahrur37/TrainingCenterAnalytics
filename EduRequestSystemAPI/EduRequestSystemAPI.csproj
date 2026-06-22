@@ -25,4 +25,11 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\seed.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>seed.sql</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>
