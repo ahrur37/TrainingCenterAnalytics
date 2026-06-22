@@ -37,6 +37,13 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ContextDb>();
     db.Database.Migrate();
+
+    var seedPath = Path.Combine(AppContext.BaseDirectory, "seed.sql");
+    if (File.Exists(seedPath))
+    {
+        var sql = File.ReadAllText(seedPath);
+        db.Database.ExecuteSqlRaw(sql);
+    }
 }
 
 // Configure the HTTP request pipeline.
