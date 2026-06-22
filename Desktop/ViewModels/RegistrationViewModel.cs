@@ -32,15 +32,28 @@ public partial class RegistrationViewModel : ViewModelBase
     [RelayCommand]
     private async Task Registration()
     {
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password) || string.IsNullOrWhiteSpace(Name))
+        {
+            Message = "Заполните все поля";
+            MessageColor = "Red";
+            return;
+        }
+
+        if (Password.Length < 6)
+        {
+            Message = "Пароль должен быть больше 6 символов";
+            MessageColor = "Red";
+            return;
+        }
         var response = await _apiservice.RegUserASync(new RegUserModel {Name = Name, Email = Email, Password = Password});
         if (response.IsSuccessStatusCode)
         {
-            Message = "Registration successful!";
+            Message = "Успешно";
             MessageColor = "Green";
         }
         else 
         {
-            Message = "Error occured while registering!";
+            Message = "Ошибка";
             MessageColor = "Red";
         }
     }

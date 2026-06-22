@@ -11,7 +11,7 @@ namespace EduRequestSystemAPI.Models
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public string? ContactInfo { get; set; }
+        public string ContactInfo { get; set; }
 
         [ForeignKey("Direction")]
         public int DirectionId { get; set; }

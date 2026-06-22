@@ -10,5 +10,7 @@ namespace EduRequestSystemAPI.Interfaces
         Task<IActionResult> GetRequestByIdAsync(int requestId); // получить все заявки от конкретного заявителя
         Task<IActionResult> AssignManagerAsync(int requestId, int managerId); // взять заявку в работу
         Task<IActionResult> ChangeStatusAsync(int requestId, int newStatusId, int currentUserId, int roleId); // изменить статус заявки
+        Task<IActionResult> UpdateRequestAsync(int requestId, int currentUserId, int roleId, UpdateRequest model);
+        Task<IActionResult> DeleteRequestAsync(int requestId, int currentUserId, int roleId);
     }
 }

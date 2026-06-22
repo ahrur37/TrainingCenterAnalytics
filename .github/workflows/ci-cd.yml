@@ -1,10 +1,12 @@
 name: CI/CD
 
 # CI: сборка проекта и автоматический прогон xUnit-тестов.
-# Запускается при push в master и для всех pull request, нацеленных в master.
+# push в master → тесты + деплой; теги v* → релиз Desktop; pull_request в master → тесты.
 on:
   push:
     branches: [ master ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ master ]
 
@@ -49,3 +51,37 @@ jobs:
             cd ~/TrainingCenterAnalytics
             git pull origin master
             docker compose up --build -d
+
+  release-desktop:
+    runs-on: macos-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build Cloud version
+        run: |
+          cp Desktop/appsettings.cloud.json Desktop/appsettings.json
+          dotnet publish Desktop/Desktop.csproj -c Release -r osx-arm64 --self-contained -o ./out/cloud
+          cp Desktop/appsettings.cloud.json ./out/cloud/appsettings.json
+      - name: Build Self-hosted version
+        run: |
+          cp Desktop/appsettings.selfhosted.json Desktop/appsettings.json
+          dotnet publish Desktop/Desktop.csproj -c Release -r osx-arm64 --self-contained -o ./out/selfhosted
+          cp Desktop/appsettings.selfhosted.json ./out/selfhosted/appsettings.json
+      - name: Rename binaries and archive
+        run: |
+          mv ./out/cloud/Desktop ./out/cloud/cloud
+          mv ./out/selfhosted/Desktop ./out/selfhosted/selfhosted
+          cd ./out/cloud && zip -r ../../cloud.zip . && cd ../..
+          cd ./out/selfhosted && zip -r ../../selfhosted.zip . && cd ../..
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./cloud.zip
+            ./selfhosted.zip

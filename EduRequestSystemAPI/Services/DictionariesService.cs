@@ -37,6 +37,9 @@ namespace EduRequestSystemAPI.Services
                 if (string.IsNullOrWhiteSpace(model.Name))
                     return new BadRequestObjectResult("Название направления не может быть пустым.");
 
+                if (await _context.Directions.AnyAsync(d => d.Name == model.Name))
+                    return new BadRequestObjectResult("Направление с таким названием уже существует.");
+
                 var direction = new Direction { Name = model.Name };
                 _context.Directions.Add(direction);
                 await _context.SaveChangesAsync();
@@ -75,7 +78,7 @@ namespace EduRequestSystemAPI.Services
             {
                 var direction = await _context.Directions.FindAsync(id);
 
-                _context.Directions.Remove(direction);
+                direction.IsActive = false;
                 await _context.SaveChangesAsync();
 
                 return new OkObjectResult($"Направление '{direction.Name}' успешно удалено.");
@@ -105,6 +108,9 @@ namespace EduRequestSystemAPI.Services
             {
                 if (string.IsNullOrWhiteSpace(model.Name))
                     return new BadRequestObjectResult("Название статуса не может быть пустым.");
+
+                if (await _context.Statuses.AnyAsync(s => s.Name == model.Name))
+                    return new BadRequestObjectResult("Статус с таким названием уже существует.");
 
                 var status = new Status { Name = model.Name };
                 _context.Statuses.Add(status);
@@ -144,10 +150,10 @@ namespace EduRequestSystemAPI.Services
             {
                 var status = await _context.Statuses.FindAsync(id);
 
-                _context.Statuses.Remove(status);
+                status.IsActive = false;
                 await _context.SaveChangesAsync();
 
-                return new OkObjectResult($"Статус '{status.Name}' успешно удалено.");
+                return new OkObjectResult($"Статус '{status.Name}' успешно удален.");
             }
             catch (Exception ex)
             {
@@ -174,6 +180,9 @@ namespace EduRequestSystemAPI.Services
             {
                 if (string.IsNullOrWhiteSpace(model.Name))
                     return new BadRequestObjectResult("Название формата обучения не может быть пустым.");
+
+                if (await _context.TrainingFormats.AnyAsync(f => f.Name == model.Name))
+                    return new BadRequestObjectResult("Формат с таким названием уже существует.");
 
                 var format = new TrainingFormat { Name = model.Name };
                 _context.TrainingFormats.Add(format);
@@ -213,7 +222,7 @@ namespace EduRequestSystemAPI.Services
             {
                 var format = await _context.TrainingFormats.FindAsync(id);
 
-                _context.TrainingFormats.Remove(format);
+                format.IsActive = false;
                 await _context.SaveChangesAsync();
 
                 return new OkObjectResult($"Формат '{format.Name}' успешно удален.");

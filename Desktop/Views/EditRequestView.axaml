@@ -4,32 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:TCA.Desktop.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="560"
-             x:Class="TCA.Desktop.Views.CreateRequestView"
-             x:DataType="vm:CreateRequestViewModel">
+             x:Class="TCA.Desktop.Views.EditRequestView"
+             x:DataType="vm:EditRequestViewModel">
 
     <Grid RowDefinitions="Auto, *" Background="#F0F2F5">
 
         <Border Grid.Row="0" Background="White" BoxShadow="0 1 4 0 #14000000" Padding="24,14">
-            <StackPanel Orientation="Horizontal" Spacing="16">
-                <Button Classes="ghost" Content="← Назад" Command="{Binding GoBackCommand}" VerticalAlignment="Center"/>
-                <TextBlock Text="Новая заявка" FontSize="20" FontWeight="SemiBold"
-                           Foreground="#212121" VerticalAlignment="Center"/>
-            </StackPanel>
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Border Background="#5C6BC0" CornerRadius="8" Width="34" Height="34">
+                        <TextBlock Text="✏️" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Редактирование заявки" FontSize="17" FontWeight="SemiBold"
+                               Foreground="#212121" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button Grid.Column="2" Classes="ghost" Content="← Назад"
+                        Command="{Binding GoBackCommand}" VerticalAlignment="Center"/>
+            </Grid>
         </Border>
 
-        <ScrollViewer Grid.Row="1" Padding="24" VerticalScrollBarVisibility="Auto">
-            <Border Classes="card" Width="480" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <ScrollViewer Grid.Row="1" Padding="24">
+            <Border Classes="card" Width="480" HorizontalAlignment="Center">
                 <StackPanel Spacing="16">
 
                     <StackPanel Spacing="4">
                         <TextBlock Classes="label" Text="Тема"/>
-                        <TextBox Text="{Binding Topic, Mode=TwoWay}" Watermark="Введите тему заявки"/>
+                        <TextBox Text="{Binding Topic, Mode=TwoWay}" PlaceholderText="Введите тему заявки"/>
                     </StackPanel>
 
                     <StackPanel Spacing="4">
                         <TextBlock Classes="label" Text="Описание"/>
                         <TextBox Text="{Binding Description, Mode=TwoWay}"
-                                 Watermark="Введите описание"
+                                 PlaceholderText="Введите описание"
                                  Height="90"
                                  TextWrapping="Wrap"
                                  AcceptsReturn="True"/>
@@ -37,7 +43,7 @@
 
                     <StackPanel Spacing="4">
                         <TextBlock Classes="label" Text="Контактная информация"/>
-                        <TextBox Text="{Binding ContactInfo, Mode=TwoWay}" Watermark="Телефон или email"/>
+                        <TextBox Text="{Binding ContactInfo, Mode=TwoWay}" PlaceholderText="Телефон или email"/>
                     </StackPanel>
 
                     <StackPanel Spacing="4">
@@ -56,15 +62,19 @@
                                   HorizontalAlignment="Stretch"/>
                     </StackPanel>
 
-                    <TextBlock Text="{Binding ErrorMessage}"
-                               Foreground="{Binding ErrorMessageColor}"
+                    <TextBlock Text="{Binding Message}"
+                               Foreground="{Binding MessageColor}"
                                FontSize="13"
                                HorizontalAlignment="Center"
-                               IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                               IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
-                    <Button Classes="primary" Content="Создать заявку"
+                    <Button Classes="primary" Content="Сохранить изменения"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                            Command="{Binding CreateRequestCommand}"/>
+                            Command="{Binding SaveCommand}"/>
+
+                    <Button Classes="danger" Content="Удалить заявку"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Command="{Binding DeleteCommand}"/>
 
                 </StackPanel>
             </Border>
