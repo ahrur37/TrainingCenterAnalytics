@@ -7,7 +7,6 @@
 ```bash
 git clone https://github.com/ahrur37/TrainingCenterAnalytics
 cd TrainingCenterAnalytics
-docker compose -f docker-compose.local.yml up --build -d
 ```
 2. Создать пароль и JWT-токен. Запустить в терминале:
 ```bash
