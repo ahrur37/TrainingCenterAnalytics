@@ -1,24 +1,43 @@
 name: CI/CD
+
+# CI: сборка проекта и автоматический прогон xUnit-тестов.
+# push в master → тесты + деплой; теги v* → релиз Desktop; pull_request в master → тесты.
 on:
   push:
     branches: [ master ]
     tags:
       - 'v*'
+  pull_request:
+    branches: [ master ]
+
 jobs:
-  build:
+  build-test:
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          # net8 — API и тесты; net10 — на случай, если в репозиторий попадёт global.json (SDK 10).
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      # Сборка тестового проекта по зависимости собирает и сам API.
       - name: Restore dependencies
-        run: dotnet restore EduRequestSystemAPI/EduRequestSystemAPI.csproj
+        run: dotnet restore EduRequestSystemAPI.Tests/EduRequestSystemAPI.Tests.csproj
+
       - name: Build
-        run: dotnet build EduRequestSystemAPI/EduRequestSystemAPI.csproj --no-restore
+        run: dotnet build EduRequestSystemAPI.Tests/EduRequestSystemAPI.Tests.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test EduRequestSystemAPI.Tests/EduRequestSystemAPI.Tests.csproj --configuration Release --no-build --verbosity normal
+
   deploy:
-    needs: build
+    needs: build-test                  # деплой только после успешной сборки и тестов
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
@@ -32,6 +51,7 @@ jobs:
             cd ~/TrainingCenterAnalytics
             git pull origin master
             docker compose up --build -d
+
   release-desktop:
     runs-on: macos-latest
     if: startsWith(github.ref, 'refs/tags/v')
