@@ -4,9 +4,10 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
         <RootNamespace>TCA.Desktop</RootNamespace>
-    </PropertyGroup>
+      <UserSecretsId>ba8675f5-d08d-4794-8ecb-3e32df4a7df9</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
@@ -37,6 +38,8 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
+        <PackageReference Include="LiveChartsCore" Version="2.1.0-dev-798" />
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.1.0-dev-798" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.9" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
 <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />

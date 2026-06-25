@@ -39,6 +39,11 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                     <Button Classes="primary" Content="+ Новая заявка"
                             Command="{Binding GoToCreateRequestCommand}"/>
+            
+                    <Button Classes="ghost" Content="Аналитика"
+                            Command="{Binding GoToDashboardCommand}"
+                            IsVisible="{Binding CanViewAnalytics}"/>
+            
                     <Button Classes="ghost" Content="Справочники"
                             Command="{Binding GoToDictionariesCommand}"
                             IsVisible="{Binding CanManageDictionaries}"/>

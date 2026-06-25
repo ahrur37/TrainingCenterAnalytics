@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TCA.Desktop.ViewModels"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Painting"
+             xmlns:lvc1="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             x:DataType="vm:DashboardViewModel"
+             x:Class="TCA.Desktop.Views.DashboardView"
+             Background="#F0F2F5">
+
+    <Grid RowDefinitions="Auto, *">
+        <Border Grid.Row="0" Background="White" BoxShadow="0 1 4 0 #14000000" Padding="20,12">
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBlock Grid.Column="0" Text="Аналитика и отчеты" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Classes="ghost" Content="Назад" Command="{Binding GoBackCommand}"/>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Margin="20">
+            <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, *">
+
+                <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*, *, *" Margin="0,0,0,20">
+                    
+                    <Border Grid.Column="0" Classes="card" Margin="0,0,10,0" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Всего заявок" Foreground="#757575" FontSize="14"/>
+                            <TextBlock Text="{Binding TotalRequests, StringFormat={}{0}}" FontWeight="Bold" FontSize="28" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Classes="card" Margin="10,0,10,0" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Закрыто заявок" Foreground="#757575" FontSize="14"/>
+                            <TextBlock Text="{Binding ClosedRequests, StringFormat={}{0}}" FontWeight="Bold" FontSize="28" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Classes="card" Margin="10,0,0,0" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Конверсия" Foreground="#757575" FontSize="14"/>
+                            <TextBlock Text="{Binding ClosureRate, StringFormat={}{0}%}" FontWeight="Bold" FontSize="28" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Classes="card" Margin="0,0,0,20" Padding="20" Height="300">
+                    <StackPanel>
+                        <TextBlock Text="Динамика заявок по дням" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,10"/>
+                        <lvc1:CartesianChart Series="{Binding DynamicsSeries}" XAxes="{Binding DynamicsXAxes}" Height="240"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="0" Classes="card" Margin="0,0,10,0" Padding="20" Height="350">
+                    <StackPanel>
+                        <TextBlock Text="Популярные направления" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,10"/>
+                        <lvc1:CartesianChart Series="{Binding PopularDirectionsSeries}" XAxes="{Binding DirectionsXAxes}" Height="290"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="1" Classes="card" Margin="10,0,0,0" Padding="20" Height="350">
+                    <StackPanel>
+                        <TextBlock Text="Распределение по статусам" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,10"/>
+                        <lvc1:PieChart Series="{Binding StatusesSeries}" LegendPosition="Right" Height="290"/>
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
