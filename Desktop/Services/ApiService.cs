@@ -152,4 +152,56 @@ public class ApiService
 
     public async Task<HttpResponseMessage> DeleteTrainingFormat(int id) =>
         await _httpClient.DeleteAsync($"DeleteTrainingFormat/{id}");
+    
+// Analytics
+    public async Task<AnalyticsSummaryDto?> GetAnalyticsSummary()
+    {
+        try 
+        {
+            var response = await _httpClient.GetAsync("summary");
+        
+            // Логируем статус ответа (например, 200, 404, 500)
+            System.Diagnostics.Debug.WriteLine($"[API Debug] GetAnalyticsSummary Status: {response.StatusCode}");
+
+            if (!response.IsSuccessStatusCode) 
+            {
+                // Логируем содержимое ошибки, если бэкенд что-то вернул
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"[API Debug] Error Content: {errorContent}");
+                return null;
+            }
+
+            // Логируем сам JSON для проверки структуры
+            var json = await response.Content.ReadAsStringAsync();
+            System.Diagnostics.Debug.WriteLine($"[API Debug] Response JSON: {json}");
+
+            // Десериализуем и возвращаем
+            return JsonSerializer.Deserialize<AnalyticsSummaryDto>(json, _jsonOptions);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[API Debug] Exception: {ex.Message}");
+            return null;
+        }
+    }
+    public async Task<List<AnalyticsDynamicsDto>> GetAnalyticsDynamics()
+    {
+        var response = await _httpClient.GetAsync("dynamics");
+        if (!response.IsSuccessStatusCode) return [];
+        return await response.Content.ReadFromJsonAsync<List<AnalyticsDynamicsDto>>(_jsonOptions) ?? [];
+    }
+
+    public async Task<List<PopularDirectionDto>> GetPopularDirections()
+    {
+        var response = await _httpClient.GetAsync("popular-directions");
+        if (!response.IsSuccessStatusCode) return [];
+        return await response.Content.ReadFromJsonAsync<List<PopularDirectionDto>>(_jsonOptions) ?? [];
+    }
+
+    public async Task<List<StatusDistributionDto>> GetStatusesDistribution()
+    {
+        var response = await _httpClient.GetAsync("statuses-distribution");
+        if (!response.IsSuccessStatusCode) return [];
+        return await response.Content.ReadFromJsonAsync<List<StatusDistributionDto>>(_jsonOptions) ?? [];
+    }
 }
