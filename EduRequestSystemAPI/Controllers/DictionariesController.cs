@@ -225,7 +225,7 @@ namespace EduRequestSystemAPI.Controllers
         /// Возвращает сотрудника для назначения ответственным за заявку.
         /// </remarks>
         [HttpGet]
-        [RoleAuthorized(2, 3)]
+        [RoleAuthorized(2, 3, 4)]
         [Route("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
