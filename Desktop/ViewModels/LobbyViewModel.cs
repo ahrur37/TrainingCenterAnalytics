@@ -42,6 +42,8 @@ public partial class LobbyViewModel : ViewModelBase
     private bool _canChangeStatus = false;
     [ObservableProperty]
     private bool _canEditRequest = false;
+    [ObservableProperty]
+    private bool _canViewAnalytics = false;
     [ObservableProperty]                                                                                                                                                          
     private string _statusMessage = string.Empty;                                                                                                                                 
     [ObservableProperty]                                                                                                                                                          
@@ -79,6 +81,7 @@ public partial class LobbyViewModel : ViewModelBase
         CanView = (Roles)_session.RoleId != Roles.User;
         CanViewAdm = (Roles)_session.RoleId == Roles.Admin;
         CanManageDictionaries = (Roles)_session.RoleId == Roles.Admin || (Roles)_session.RoleId == Roles.Director;
+        CanViewAnalytics = _session.RoleId == 4;
         _signalR.CommentAdded += OnCommentAdded;
     }
 
@@ -313,5 +316,11 @@ public partial class LobbyViewModel : ViewModelBase
         var vm = App.Services.GetRequiredService<EditRequestViewModel>();
         vm.LoadRequest(SelectedRequest);
         _navigator.NavigateTo(vm);
+    }
+    
+    [RelayCommand]
+    private void GoToDashboard()
+    {
+        _navigator.NavigateTo(App.Services.GetRequiredService<DashboardViewModel>());
     }
 }

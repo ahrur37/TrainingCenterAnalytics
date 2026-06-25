@@ -5,6 +5,7 @@ using EduRequestSystemAPI.Services;
 using EduRequestSystemAPI.UniversalMethods;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using EduRequestSystemAPI.Services.Implementations;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IDictionariesService, DictionariesService>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 builder.Services.AddSingleton<jwtGenerator>();
 
