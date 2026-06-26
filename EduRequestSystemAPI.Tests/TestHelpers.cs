@@ -5,16 +5,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace EduRequestSystemAPI.Tests;
 
-/// <summary>
-/// Общие помощники для тестов: изолированный in-memory контекст БД
-/// (без реального PostgreSQL) и настоящий генератор JWT с тестовым ключом.
-/// </summary>
 internal static class TestHelpers
 {
-    /// <summary>
-    /// Создаёт свежий ContextDb на провайдере EF Core InMemory.
-    /// Каждый вызов использует уникальное имя БД, поэтому тесты полностью изолированы.
-    /// </summary>
     public static ContextDb CreateInMemoryContext()
     {
         var options = new DbContextOptionsBuilder<ContextDb>()
@@ -24,9 +16,6 @@ internal static class TestHelpers
         return new ContextDb(options);
     }
 
-    /// <summary>
-    /// Создаёт реальный jwtGenerator с тестовым ключом (достаточной длины для HS256).
-    /// </summary>
     public static jwtGenerator CreateJwtGenerator()
     {
         var configuration = new ConfigurationBuilder()

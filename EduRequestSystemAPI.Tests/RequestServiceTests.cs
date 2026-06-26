@@ -8,17 +8,11 @@ using Xunit;
 
 namespace EduRequestSystemAPI.Tests;
 
-/// <summary>
-/// Тесты сервиса заявок: создание заявки и фильтрация/поиск.
-/// </summary>
 public class RequestServiceTests
 {
-    // ──────────────────────────── Тест №3: Создание заявки ─────────────────────────
-
     [Fact]
     public async Task CreateRequestAsync_PersistsRequestWithNewStatusAndAuditLog()
     {
-        // Arrange
         await using var ctx = TestHelpers.CreateInMemoryContext();
         var service = new RequestService(ctx);
 
@@ -32,58 +26,47 @@ public class RequestServiceTests
             AuthorId = 42
         };
 
-        // Act
         var result = await service.CreateRequestAsync(model);
 
-        // Assert
         Assert.IsType<OkObjectResult>(result);
 
         var request = Assert.Single(ctx.Requests);
         Assert.Equal("Курс по C#", request.Topic);
         Assert.Equal(42, request.AuthorId);
-        Assert.Equal(1, request.StatusId);                 // новая заявка получает статус 1 ("Новая")
-        Assert.True(request.CreatedAt > DateTime.MinValue); // дата создания проставлена
+        Assert.Equal(1, request.StatusId);
+        Assert.True(request.CreatedAt > DateTime.MinValue);
 
-        // Создание заявки фиксируется в журнале аудита и ссылается на её Id
         Assert.Contains(ctx.AuditLogs,
             a => a.Action == AuditAction.CreateRequest && a.EntityId == request.Id);
     }
 
-    // ───────────────────────── Тест №5: Фильтрация заявок ──────────────────────────
-
     [Fact]
     public async Task GetRequestsAsync_WithSearchTerm_ReturnsOnlyMatchingByTopicOrDescription()
     {
-        // Arrange
         await using var ctx = TestHelpers.CreateInMemoryContext();
         await SeedRequestsAsync(ctx);
         var service = new RequestService(ctx);
 
-        // Act — регистр не должен иметь значения ("КУРС" найдёт "Курс по ...")
         var result = await service.GetRequestsAsync(
             statusId: null, directionId: null, searchTerm: "КУРС", assigneeId: null, authorId: null);
 
-        // Assert
         var ok = Assert.IsType<OkObjectResult>(result);
         var requests = Assert.IsType<List<Request>>(ok.Value);
 
-        Assert.Equal(2, requests.Count); // обе заявки со словом "Курс" в теме
+        Assert.Equal(2, requests.Count);
         Assert.All(requests, r => Assert.Contains("курс", r.Topic.ToLower()));
     }
 
     [Fact]
     public async Task GetRequestsAsync_WithStatusFilter_ReturnsOnlyRequestsWithThatStatus()
     {
-        // Arrange
         await using var ctx = TestHelpers.CreateInMemoryContext();
         await SeedRequestsAsync(ctx);
         var service = new RequestService(ctx);
 
-        // Act — только заявки со статусом 1 ("Новая")
         var result = await service.GetRequestsAsync(
             statusId: 1, directionId: null, searchTerm: null, assigneeId: null, authorId: null);
 
-        // Assert
         var ok = Assert.IsType<OkObjectResult>(result);
         var requests = Assert.IsType<List<Request>>(ok.Value);
 
@@ -91,13 +74,6 @@ public class RequestServiceTests
         Assert.All(requests, r => Assert.Equal(1, r.StatusId));
     }
 
-    /// <summary>
-    /// Три заявки для проверки фильтров:
-    /// две со словом "Курс" в теме и статусом 1, одна — статус 2.
-    /// GetRequestsAsync делает .Include() по обязательным связям (направление, статус,
-    /// формат, автор), поэтому связанные справочные записи тоже нужно создать —
-    /// иначе INNER JOIN отфильтрует заявки.
-    /// </summary>
     private static async Task SeedRequestsAsync(ContextDb ctx)
     {
         ctx.Directions.AddRange(

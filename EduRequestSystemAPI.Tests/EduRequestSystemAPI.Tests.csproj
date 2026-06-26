@@ -18,8 +18,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
   </ItemGroup>
 
-  <!-- Сервисы возвращают IActionResult (Microsoft.AspNetCore.Mvc), поэтому тестовому
-       проекту нужен доступ к общему фреймворку ASP.NET Core. -->
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
